@@ -1,0 +1,3 @@
+crypto pptp chap
+crypto pptp mschap
+crypto pptp pap

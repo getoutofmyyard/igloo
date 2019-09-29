@@ -1,0 +1,2 @@
+show fwall in			- show active inbound firewall rules
+show fwall out			- show active outbound firewall rules

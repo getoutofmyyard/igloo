@@ -1,0 +1,10 @@
+com                     - COM+ Network Access 
+dotnet45                - .NET Framework 4.5 
+http                    - HTTP Activation 
+msmq                    - Message Queueing Activation 
+named-pipes             - Named Pipes Activation
+tcp                     - TCP Activation
+tcp-sharing             - TCP Port Sharing
+transaction             - Transaction Options
+was                     - Windows Process Activation Service Support
+web-support             - IIS Support

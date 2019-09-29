@@ -1,0 +1,5 @@
+fwall entry                 - define a firewall rule
+fwall on|off                - toggle firewall globally
+fwall priv         on|off   - toggle firewall for the private network profile
+fwall dom          on|off   - toggle firewall for the domain  network profile
+fwall pub          on|off   - toggle firewall for the public  network profile

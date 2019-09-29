@@ -1,0 +1,2 @@
+pshell                - Hyper-V Module for Windows PowerShell 
+tools                 - Hyper-V GUI Management Tools

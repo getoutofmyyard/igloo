@@ -1,0 +1,17 @@
+ad-cs                	- Active Directory Certificate Services
+ad-rights            	- Active Directory Rights Management Services
+app-server           	- Application Server
+bitlocker            	- Bitlocker
+bits                 	- Background Intelligent Transfer Service (BITS)
+dotnet               	- .NET
+dotnet45             	- .NET45
+feature              	- Install server features
+hyperv               	- Hyper-V
+iis                  	- IIS (Web Server)
+iscsi                	- File Services
+msmq                 	- Microsoft Message Queueing
+npas                 	- Network Policy and Access Services
+rdp                  	- Remote Access Server
+rsat                 	- Remote Server Administration Tools
+update-services      	- Windows Update Services
+wds                  	- Windows Deployment Services

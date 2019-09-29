@@ -1,0 +1,2 @@
+Syntax:  ftp {ftp server address}
+Example: ftp 10.0.0.1

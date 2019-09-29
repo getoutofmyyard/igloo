@@ -1,0 +1,3 @@
+tcp scan			- scan well-known tcp ports
+tcp connect			- probe individual tcp ports. useful for testing sockets and filters.
+tcp reset			- restart network adapters

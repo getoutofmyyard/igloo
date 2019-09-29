@@ -1,0 +1,3 @@
+show ip address			- show ipv4 addresses configured on this device
+show ip public			- show the inside global IP for this device
+show ip route			- show the local routing table

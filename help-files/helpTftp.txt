@@ -1,0 +1,15 @@
+Transfers files to and from a remote computer running the TFTP service.
+
+TFTP [-i] host [GET | PUT] source [destination]
+
+  -i              Specifies binary image transfer mode (also called
+                  octet). In binary image mode the file is moved
+                  literally, byte by byte. Use this mode when
+                  transferring binary files.
+  host            Specifies the local or remote host.
+  GET             Transfers the file destination on the remote host to
+                  the file source on the local host.
+  PUT             Transfers the file source on the local host to
+                  the file destination on the remote host.
+  source          Specifies the file to transfer.
+  destination     Specifies where to transfer the file.

@@ -1,0 +1,12 @@
+get ccleaner			- download and install CCleaner
+get cpuz			- download and install CPU-Z
+get linux			- download linux distributions
+get mysql			- download and install MySQL
+get putty			- download and install PuTTY
+get python			- download and install Python
+get ruby			- download and install Ruby
+get tftp			- download and install TFTPd64
+get virtualbox			- download and install VirtualBox
+get vlc				- download and install VLC Media Player
+get winrar			- download and install WinRAR
+get winscp			- download and install WinSCP

@@ -1,0 +1,8 @@
+dcom                 	- Message Queuing DCOM Proxy
+directory            	- Directory Service Integration
+http-support         	- HTTP Support
+multicast            	- Multicasting Support
+routing              	- Routing Service
+server               	- Message Queuing Server 
+services             	- Message Queuing Services 
+triggers             	- Message Queuing Triggers

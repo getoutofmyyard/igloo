@@ -1,0 +1,1 @@
+net reset			- restart network adapters

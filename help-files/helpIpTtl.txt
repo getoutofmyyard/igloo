@@ -1,0 +1,1 @@
+ip ttl {# of hops}		- set the time-to-live value for outgoing packets

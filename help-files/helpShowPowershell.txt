@@ -1,0 +1,2 @@
+show powershell policy		- Displays PowerShell Execution Policy
+show powershell version 	- Displays the PowerShell version that is currently installed

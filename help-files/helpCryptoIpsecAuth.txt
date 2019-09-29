@@ -1,0 +1,2 @@
+md5				- authenticate using md5
+sha256				- authenticate using sha256 (recommended)

@@ -1,0 +1,3 @@
+ctcp				- use compound tcp     
+dctcp				- use data center tcp. ecn required. use 'ip tcp ecn enable'.
+new-reno			- use new-reno tcp

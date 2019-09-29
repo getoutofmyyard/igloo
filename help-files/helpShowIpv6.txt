@@ -1,0 +1,3 @@
+show ipv6 address		- show ipv6 addresses configured on this device
+show ipv6 public		- show the public NAT for this device
+show ipv6 route			- show the local ipv6 routing table

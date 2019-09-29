@@ -1,0 +1,20 @@
+ip address
+ip address
+ip address
+ip icmp
+ip icmp
+ip igmp
+ip igmp
+ip metric
+ip metric
+ip multicast
+ip multicast
+ip route
+ip route
+ip source-route
+ip source-route
+ip tcp
+ip tcp
+ip ttl
+ip ttl
+no ip route

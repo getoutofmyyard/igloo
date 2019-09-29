@@ -1,0 +1,2 @@
+Syntax:  ip tcp port-range {begin range} - {end range}
+Example: ip tcp port-range 12000 - 14000

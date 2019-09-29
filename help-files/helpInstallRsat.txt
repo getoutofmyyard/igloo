@@ -1,0 +1,45 @@
+ad-admin-center         - Active Directory Administrative Center
+ad-cs                   - Active Directory Certificate Services Tools 
+ad-cs-mgmt              - Certification Authority Management Tools 
+ad-ds                   - AD DS Tools
+ad-ds-tools             - AD DS Snap-Ins and Command-Line Tools 
+ad-lds                  - AD LDS Snap-Ins and Command-Line Tools
+ad-pshell               - Active Directory module for Windows PowerShell 
+ad-rights               - Active Directory Rights Management Services Tools
+ad-tools                - AD DS and AD LDS Tools 
+bitlocker-admin         - BitLocker Drive Encryption Administration Utilities
+bitLocker-encryption    - BitLocker Drive Encryption Tools
+bitlocker-recovery      - BitLocker Recovery Password Viewer 
+bits-server             - BITS Server Extensions Tools 
+clustering command-int  - Failover Cluster Command Interface 
+clustering              - Failover Clustering Tools 
+clustering-automation   - Failover Cluster Automation Server 
+clustering-mgmt         - Failover Cluster Management Tools 
+clustering-pshell       - Failover Cluster Module for Windows PowerShell 
+core-file-mgmt          - Share and Storage Management Tool
+dfs-mgmt                - DFS Management Tools 
+dhcp                    - DHCP Server Tools
+dns                     - DNS Server Tools
+fax                     - Fax Server Tools
+feature-tools           - Feature Administration Tools 
+file-services           - Files Services Tools
+fsrm-mgmt               - File Server Resource Manager Tools
+hyperv                  - Hyper-V Management Tools 
+license-check           - Remote Desktop Licensing Diagnoser Tools 
+license-ui              - Remote Desktop Licensing Tools 
+nfs-admin               - Services for Network File System Management Tools 
+nis                     - Server for NIS Tools (Deprecated)
+nlb                     - Network Load Balancing Tools 
+npas                    - Network Policy and Access Services Tools
+print-services          - Print and Document Services Tools 
+rds-gateway             - Remote Desktop Gateway Tools 
+rds-tools               - Remote Desktop Services Tools 
+remote-access           - Remote Access Management Tools 
+remote-access-mgmt      - Remote Access GUI and Command-Line Tools 
+remote-access-pshell    - Remote Access module for Windows PowerShell 
+responder               - Online Responder Tools 
+role-tools              - Role Administration Tools 
+smtp                    - SMTP Server Tools 
+snmp                    - SNMP Tools
+va-tools                - Volume Activation Tools 
+wins                    - WINS Server Tools

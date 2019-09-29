@@ -1,0 +1,3 @@
+forward                		- permit forwarding of source-routed packets
+receive-only                    - permit processing of source-routed packets
+drop				- block source-routed packets from being forwarded or processed

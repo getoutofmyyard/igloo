@@ -1,0 +1,3 @@
+group1				- use DH Group 1 during negotiation with peer
+group2				- use DH Group 2 during negotiation with peer
+group14				- use DH Group 14 during negotiation with peer

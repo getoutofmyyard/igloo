@@ -1,0 +1,3 @@
+pap				- authenticate using pap
+chap				- authenticate using chap
+mschap				- authenticate using MS-CHAPv2

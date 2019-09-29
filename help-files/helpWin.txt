@@ -1,0 +1,31 @@
+win app             - programs and features
+win aux             - sounds and audio devices
+win blu             - bluetooth devices
+win cleanmgr        - disk cleanup
+win cmd             - cmd.exe
+win defrag          - disk defragmentation
+win dev             - device manager
+win disk            - disk management
+win display         - display settings
+win font            - fonts
+win fwall           - opens windows firewall gui
+win gpupdate        - gpupdate
+win ie              - internet explorer options
+win info            - system information
+win ir              - infrared devices
+win nic             - network adapters
+win perfmon         - performance monitor
+win print           - devices and printers
+win power           - power options
+win powershell      - powershell.exe
+win rdp             - remote desktop client
+win reboot          - restarts the host immediately
+win regedit         - registry editor
+win taskschd        - task scheduler
+win scsi            - iscsi initiator
+win services        - services
+win sysdm           - advanced system properties
+win taskmgr         - task manager
+win update          - windows update
+win usrmgr          - user accounts (local)
+win wev             - windows event viewer

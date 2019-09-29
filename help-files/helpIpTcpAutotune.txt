@@ -1,0 +1,3 @@
+disable				- set the tcp receive window size to system default
+normal				- allow the tcp receive window to exceed the system default greatly
+restrict			- allow the tcp receive window to exceed the system default slightly

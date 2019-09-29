@@ -1,0 +1,6 @@
+http-activation         - HTTP Activation
+msmq-activation         - Message Queueing Activation
+pipe-activation         - Pipe Activation
+tcp-activation          - TCP Activation
+tcp-port-sharing        - TCP Port Sharing
+wcf                     - Windows Communication Foundation Services

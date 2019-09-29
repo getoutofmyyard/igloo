@@ -1,0 +1,24 @@
+Use "?" after a command to see more options, e.g. "win ?"
+			
+???				- list all commands
+about				- information about Igloo
+calc				- calculator
+cls 				- clear the Igloo console
+cmd				- cmd.exe
+crypto				- vpn and other security-related options
+ftp				- initiate an ftp connection
+fwall				- firewall configuration
+get				- download and install applications
+ip				- ipv4 configuration options
+igloo				- open another instance of igloo
+notepad				- old faithful
+nslookup			- perform dns lookups
+ping				- ping utility
+powershell			- powershell
+show				- display logs, configurations, and other statistics
+tcp				- network tools
+tftp				- trivial file transfer protocol
+tracert				- tracert utility
+update				- download and install windows updates
+web				- web shortcuts
+win				- windows shortcuts

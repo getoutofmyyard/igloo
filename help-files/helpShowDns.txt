@@ -1,0 +1,2 @@
+show dns cache			- display the contents of the local host's dns cache
+show dns server			- display configured dns servers

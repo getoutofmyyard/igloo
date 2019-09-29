@@ -1,0 +1,5 @@
+api                     - API and PowerShell Cmdlets 
+database                - Update Services Database
+rsat                    - Windows Server Update Services Tools
+services                - WSUS Services 
+widdb                   - WID Database

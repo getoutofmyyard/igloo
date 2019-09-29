@@ -1,0 +1,4 @@
+Syntax:  crypto del {vpn name}
+Example: crypto del myvpn 
+
+Use 'show crypto' for a list of vpn adapters.

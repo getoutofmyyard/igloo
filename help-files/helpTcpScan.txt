@@ -1,0 +1,5 @@
+Syntax:  tcp scan {destination address or hostname}
+Example: tcp scan 10.0.0.1
+
+* Notifications are only triggered by open ports. A scan with no results indicates that a host is non-existent or
+* that the tcp syns sent by this device are being filtered.

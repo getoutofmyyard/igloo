@@ -1,0 +1,2 @@
+enable				- enable  routing updates resulting from icmp redirect packets
+disable				- disable routing updates resulting from icmp redirect packets

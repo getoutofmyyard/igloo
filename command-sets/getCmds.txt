@@ -1,0 +1,27 @@
+get ruby 2.1
+get ruby 2.2
+get ruby 2.3
+get ruby 2.4
+get ruby 2.5
+get ruby 2.6
+get python 2.7
+get python 3.4
+get python 3.5
+get python 3.6
+get python 3.7
+get linux mint
+get linux ubuntu
+get 7Zip
+get ccleaner
+get cpuz
+get mysql
+get putty
+get sysinternals
+get tftp
+get update
+get virtualbox
+get vlc
+get windirstat
+get winrar
+get winscp
+get java

@@ -1,0 +1,2 @@
+enable				- enable forwarding of multicasts
+disable				- disable forwarding of multicasts

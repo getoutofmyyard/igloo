@@ -1,0 +1,4 @@
+show log app			- show recent application logs
+show log sec			- show recent security logs
+show log sys			- show recent system logs
+show log wev			- opens Windows Event Viewer

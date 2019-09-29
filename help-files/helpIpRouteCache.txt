@@ -1,0 +1,1 @@
+limit {# of entries}            - set the maximum number of routing table entries for the local host

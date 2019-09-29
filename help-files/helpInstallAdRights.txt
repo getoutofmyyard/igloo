@@ -1,0 +1,2 @@
+id                      - Identity Federation Support 
+server                  - Active Directory Rights Management Server

@@ -1,0 +1,11 @@
+branch-cache            - BranchCache for Network Files 
+dedup                   - Data Deduplication
+dfs-replicate           - DFS Replication
+dfs-resource-mgmt       - DFS Resource Management
+dfs-space               - DFS Namespaces
+nfs-service             - Unix NFS Service
+server                  - File Server
+sync-share              - Work Folders
+target-server           - iSCSI Target Server
+target-vss              - iSCSI Target Storage Provider
+vss                     - File Server VSS Agent Service

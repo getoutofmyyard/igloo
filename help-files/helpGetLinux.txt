@@ -1,0 +1,2 @@
+get linux mint			- download mint 	(1.9 GB)
+get linux ubuntu		- download ubuntu 	(1.9 GB)

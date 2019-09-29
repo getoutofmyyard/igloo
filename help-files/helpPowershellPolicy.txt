@@ -1,0 +1,4 @@
+restrict			- default setting. powershell scripts can only run from the console.
+allsign				- powershell scripts are allowed to run only if they are signed.
+remote				- powershell scripts which are created locally are allowed to run. outside scripts must be signed.
+open 				- lifts all restrictions from powershell script execution.

@@ -1,0 +1,26 @@
+show arp
+show arp
+show cidr-table
+show crypto
+show dns cache
+show dns server
+show drive
+show drives
+show gpo
+show int
+show ip address
+show ip public
+show ip route
+show ipv6 address
+show ipv6 public
+show ipv6 route
+show log app
+show log sec
+show log sys
+show log wev
+show powershell policy
+show powershell version
+show proc
+show proc top
+show svc
+show tcp

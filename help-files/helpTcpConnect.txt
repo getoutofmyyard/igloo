@@ -1,0 +1,2 @@
+Syntax:  tcp connect {destination address or hostname} port {destination tcp port}
+Example: tcp connect 10.0.0.1 port 53

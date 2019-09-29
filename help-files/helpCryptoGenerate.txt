@@ -1,0 +1,2 @@
+psk           - generate a pseudorandom pre-shared key
+rsa           - generate an rsa certificate and save to 'downloads'

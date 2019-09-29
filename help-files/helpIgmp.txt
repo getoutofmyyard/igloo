@@ -1,0 +1,3 @@
+v1	  		 	- enable IGMPv1
+v2	  		 	- enable IGMPv2
+v3				- enable IGMPv3

@@ -1,0 +1,5 @@
+Syntax:  [no] fwall entry [entry-name] {permit/deny} {tcp/udp} [port] {in/out}
+Example: fwall entry my-rule permit tcp 443 in
+Example: no fwall entry my-rule
+
+* Use 'show fwall in/out' to verify your entries

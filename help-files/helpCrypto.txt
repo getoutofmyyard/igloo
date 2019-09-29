@@ -1,0 +1,7 @@
+crypto connect              - connect to a defined vpn
+crypto del                  - delete a VPN connection
+crypto pptp                 - define a  pptp connection
+crypto ipsec                - define an ipsec connection
+crypto generate             - generate keys
+
+show crypto                 - show all VPN connections

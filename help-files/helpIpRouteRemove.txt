@@ -1,0 +1,2 @@
+Syntax:  no ip route {destination subnet}
+Example: no ip route 172.16.1.0/24

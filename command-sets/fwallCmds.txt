@@ -1,0 +1,8 @@
+fwall dom off
+fwall dom on
+fwall off
+fwall on
+fwall priv off
+fwall priv on
+fwall pub off
+fwall pub on

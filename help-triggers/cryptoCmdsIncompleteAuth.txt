@@ -1,0 +1,8 @@
+crypto ipsec 3des
+crypto ipsec 3des ?
+crypto ipsec aes128
+crypto ipsec aes128 ?
+crypto ipsec aes256
+crypto ipsec aes256 ?
+crypto ipsec des
+crypto ipsec des ?

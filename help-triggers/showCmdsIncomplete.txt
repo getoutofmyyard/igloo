@@ -1,0 +1,14 @@
+show
+show ?
+show dns
+show dns ?
+show fwall
+show fwall ?
+show ip
+show ip ?
+show ipv6
+show ipv6 ?
+show log
+show log ?
+show powershell
+show powershell ?

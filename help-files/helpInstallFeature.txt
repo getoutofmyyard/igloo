@@ -1,0 +1,94 @@
+ad-cs                       - Active Directory Certification Services
+ad-ds                       - Active Directory Domain Services
+ad-fs                       - Active Directory Federation Services
+ad-rights                   - Active Directory Rights Management Services
+adlds                       - Active Directory Lightweight Directory Services
+app-server                  - Application Server
+biometrics                  - Biometrics Support
+bitlocker                   - Bitlocker
+bits                        - Background Intelligent Transfer Service
+branch-cache                - BranchCache
+cmak                        - RAS Connection Manager Administration Kit
+dc-bridge                   - Data Center Bridging
+desktop-experience          - Desktop Experience GUI
+dhcp-server                 - DHCP Server
+direct-access               - DirectAccess VPN
+direct-play                 - Direct Play
+dns-server                  - DNS Server
+dotnet                      - .NET Framework
+dotnet-core                 - .NET Core
+dotnet45                    - .NET Framework 4.5
+dotnet45-core               - .NET Framework 4.5 Core
+dsc-service                 - PowerShell Desired State Configuration Service
+enhanced-storage            - Enhanced Storage
+failover-clustering         - Failover Clustering
+fax                         - Fax Services
+gpmc                        - Group Policy Management
+handwriting-services        - Ink and Handwriting Services
+hyperv                      - Hyper-V
+iis                         - IIS (Web Server)
+internet-print-client       - Internet Printing Client
+ipam                        - IP Address Management Server
+ipam-client                 - IP Address Management Client
+iscsi                       - File Services
+isns                        - iSNS Server
+lpr-port-monitor            - Line Printer Remote Port Monitor
+msmq                        - Microsoft Message Queueing
+multipath-io                - Multipath I/O
+nfs-client                  - Client for Unix NFS servers
+nlb                         - Network Load Balancing
+npas                        - Network Policy and Access Services Tools 
+pnrp                        - Peer Name Resolution Protocol
+print-internet              - Internet Printing
+print-lpd                   - Line Printer Daemon Service
+print-services              - Print and Document Services
+pshell                      - PowerShell
+pshell-ise                  - PowerShell ISE
+pshell-root                 - PowerShell (Root)
+pshell-v2                   - PowerShell Version 2 (Legacy)
+pshell-web-access           - Windows PowerShell Web Access 
+qwave                       - qWave
+rdc                         - Remote Differential Compression
+rdp-server                  - Remote Desktop Services
+remote-access               - Remote Access Services
+remote-assist               - Remote Assistance Services
+routing                     - IP Routing Services
+rpc-over-http-proxy         - RPC over HTTP Proxy
+rsat                        - Remote Server Administration Tools
+scan-server                 - Windows Scan and Print Services
+search-service              - Windows Search Service
+server-backup               - Windows Server Backup
+server-essentials           - Windows Server Essentials
+server-gui-mgmt             - Graphical Management Tools and Infrastructure 
+server-gui-shell            - Server Graphical Shell 
+server-media-foundation     - Media Foundation 
+server-migration            - Windows Server Migration Tools
+simple-tcpip                - Simple TCP/IP Services
+smb-1                       - SMB 1.0/CIFS File Sharing Support
+smb-bandwidth-limit         - SMB Bandwidth Limit 
+smtp-server                 - SMTP Server
+smtp-services               - SMTP Services
+snmp-wmi-provider           - SNMP Windows Management Instrumentation
+storage                     - File and Storage Services
+telnet-client               - Telnet Client
+telnet-server               - Telnet Service
+tftp                        - TFTP Service
+update-services             - Windows Update Services
+user-interfaces             - User Interfaces and Infrastructure 
+volume-activation           - Volume Activation Services
+was                         - Windows Process Activation Service 
+was api                     - Windows Process Activation Service API
+was-dotnet-env              - Windows Process Activation Service .NET Environment
+was-proc-model              - Windows Process Activation Service Process Model
+wds                         - Windows Deployment Services
+wds-admin-pack              - WDS Admin Pack
+web-proxy                   - Web Application Proxy
+wff                         - Windows Feedback Forwarder 
+win-identity-foundation     - Windows Identity Foundation 3.5
+win-internal-database       - Windows Internal Database
+win-storage-mgmt            - Windows Storage Management
+win-tiff-ifilter            - Windows Tagged Image File Format Index Filter
+wins                        - WINS Server
+wireless-networking         - Wireless Networking Service
+wow64-support               - WoW64 Support
+xps-viewer                  - XPS Viewer

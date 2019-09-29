@@ -1,0 +1,6 @@
+connection-broker       - Remote Desktop Connection Broker
+gateway                 - Remote Desktop Gateway 
+licensing               - Remote Desktop Licensing
+session-host            - Remote Desktop Session Host
+virtual                 - Remote Desktop Virtualization
+web-access              - Remote Desktop Web Access

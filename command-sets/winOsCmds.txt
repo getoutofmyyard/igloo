@@ -1,0 +1,26 @@
+cls
+tftp
+ftp
+telnet
+nslookup
+netsh
+win app
+win blu
+win dev
+win disk
+win display
+win fwall
+win ie
+win ir
+win perfmon
+win print
+win taskschd
+win scsi
+win services
+win powershell
+win cmd
+win wev
+powershell policy restrict
+powershell policy open
+powershell policy as
+powershell policy remote

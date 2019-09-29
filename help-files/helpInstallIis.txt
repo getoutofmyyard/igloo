@@ -1,0 +1,54 @@
+app-dev                 - Application Development
+app-init                - Application Initialiation
+asp                     - Active Server Pages
+asp-net                 - ASP .NET 3.5
+asp-net45               - ASP .NET 4.5
+auto-compression        - Dynamic Content Compression
+basic-auth              - Basic Web Authentication
+cgi                     - CGI
+client-cert-auth        - IIS Client Certificate Mapping Authentication
+client-hash-auth        - Digest Authentication 
+default-doc             - Default Document
+dir-browser             - Directory Browsing
+ftp-ext                 - FTP Extensions
+ftp-server              - FTP Server
+ftp-service             - FTP Services
+health                  - Health and Diagnostics
+http-common             - Common HTTP Features
+http-errors             - HTTP Errors
+http-redirect           - HTTP Redirects
+http-tracing            - Tracing
+hwc                     - IIS Hostable Web Core 
+ip-security             - IP Security
+isapi                   - ISAPI Extensions
+isapi-filter            - ISAPI Filtering
+legacy-scripting        - IIS 6 Scripting Tools 
+logging custom          - Custom logging
+logging http            - HTTP logging
+logging libs            - Logging Tools
+logging odbc            - ODBC logging
+metabase                - IIS 6 Metabase Compatibility 
+mgmt-compatibility      - IIS 6 Management Compatibility 
+mgmt-console            - IIS Management Console 
+mgmt-console-legacy     - IIS 6 Management Console 
+mgmt-service            - Management Service
+mgmt-tools              - Management Tools
+dotnet                  - .NET Framework 3.5
+dotnet45                - .NET Framework 4.5
+odata                   - Management OData IIS Extension 
+performance             - Performance
+request-mon             - Resquest Monitor
+scripting               - IIS Management Scripts and Tools 
+security                - Security
+ssi                     - Server-Side Includes
+ssl-provider            - Centralized SSL Certificate Support 
+static-compression      - Static Content Compression
+static-content          - Static Content
+url-auth                - URL Authorization
+web-filter              - Request Filtering
+web-server              - Web Server
+web-sockets             - WebSocket Protocol
+webdav-publishing       - WebDAV Publishing
+windows-auth            - Windows Authentication
+winrm                   - WinRM IIS Extension 
+wmi                     - IIS 6 WMI Compatibility

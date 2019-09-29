@@ -1,0 +1,4 @@
+atomic               - WS-Atomic Transactions
+distributed          - Distributed Transactions
+incoming             - Incoming Network Transactions
+outgoing             - Outgoing Network Transactions

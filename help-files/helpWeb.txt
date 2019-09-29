@@ -1,0 +1,10 @@
+web cisco			- Cisco Technical Documentation
+web dell			- Dell Warranty & Contracts
+web google			- Google
+web python			- Python
+web rfc				- RFC Index
+web ruby			- Ruby
+web stackoverflow		- Stack Overflow
+web superuser			- Superuser
+web technet			- Microsoft Technet Library
+web wiki			- Wikipedia
