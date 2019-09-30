@@ -1,0 +1,7 @@
+arista          - Arista EOS devices
+asa             - Cisco ASA
+hp-curve        - HP Procurve
+ios             - Cisco IOS/IOS-XE
+ios-xr          - Cisco IOS-XR
+juniper         - JunOS
+nexus           - Cisco NX-OS

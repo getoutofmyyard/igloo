@@ -19,6 +19,7 @@ ssh                 - autorun cli commands over a list of devices
 tcp                 - network tools
 tftp                - trivial file transfer protocol
 tracert             - tracert utility
+uninstall           - uninstall Windows Server features
 update              - download and install windows updates
 web                 - web shortcuts
 win                 - windows shortcuts

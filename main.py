@@ -7,6 +7,7 @@ from fwall import *
 from tcp import *
 from ipconf import *
 from sshSet import *
+from updateWindows import *
 
 yes = ['y', 'Y', 'yes', 'Yes'] 
 no = ['n', 'N', 'no', 'No']
@@ -45,6 +46,7 @@ crypto_pptp = parse_file('.\\command-sets\\cryptoPptpCmds.txt')
 fwall_general = parse_file('.\\command-sets\\fwallCmds.txt')
 fwall_show = parse_file('.\\command-sets\\fwallShowCmds.txt')
 install_cmds = parse_file('.\\command-sets\\installCmds.txt')
+uninstall_cmds = parse_file('.\\command-sets\\uninstallCmds.txt')
 ip_cmds = parse_file('.\\command-sets\\ipCmds.txt')
 show_cmds = parse_file('.\\command-sets\\showCmds.txt')
 win_os_cmds = parse_file('.\\command-sets\\winOsCmds.txt')
@@ -210,6 +212,20 @@ def install_tree(install_command):
     except:
         pass
 
+def uninstall_tree(uninstall_command):
+    # Search winPopenDict.py for relevant command.
+    newline()
+    try:
+        for command in uninstallDict.uninstall_dictionary:
+            if command == uninstall_command:
+                print('notify~! Attempting installation...')
+                newline()
+                subprocess.call(uninstallDict.uninstall_dictionary.get(command))
+            else:
+                pass
+    except:
+        pass
+
 def cli():
     # CLI prompts user for input as long as prompt_keepalive == 1
     prompt_keepalive = 1
@@ -291,6 +307,9 @@ def cli():
             elif strip_cmd in install_cmds:
                 install_tree(strip_cmd)
 
+            elif strip_cmd in uninstall_cmds:
+                uninstall_tree(strip_cmd)
+
             elif 'tcp connect' in strip_cmd:
                 tcp_connect(strip_cmd)
 
@@ -335,10 +354,15 @@ def cli():
                 for line in webDict.web_dictionary:
                     if line == strip_cmd:
                         key = webDict.web_dictionary.get(line)
+                        newline()
+                        print('notify~! Opening {} with default browser.'.format(key))
                         webbrowser.open_new(key)
                         newline()
                     else:
                         pass
+
+            elif strip_cmd == 'update':
+                update_windows()
 
             # Allows newlines/returns in the terminal
             elif strip_cmd == '':
