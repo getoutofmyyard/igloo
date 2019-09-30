@@ -1,0 +1,4 @@
+show            - Print 'show' command output to terminal
+write           - Write command output to file(s)
+
+Use 'man ssh' for detailed usage information.

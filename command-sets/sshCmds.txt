@@ -1,0 +1,15 @@
+ssh show ios
+ssh show asa
+ssh show ios-xr
+ssh show arista
+ssh show hp-curve
+ssh show juniper
+ssh show nexus
+ssh write ios
+ssh write asa
+ssh write ios-xr
+ssh write arista
+ssh write hp-curve
+ssh write juniper
+ssh write nexus
+

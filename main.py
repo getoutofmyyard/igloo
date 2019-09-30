@@ -5,6 +5,7 @@ from crypto import *
 from fwall import *
 from tcp import *
 from ipconf import *
+from sshSet import *
 
 yes = ['y', 'Y', 'yes', 'Yes'] 
 no = ['n', 'N', 'no', 'No']
@@ -47,6 +48,7 @@ ip_cmds = parse_file('.\\command-sets\\ipCmds.txt')
 show_cmds = parse_file('.\\command-sets\\showCmds.txt')
 win_os_cmds = parse_file('.\\command-sets\\winOsCmds.txt')
 win_popen_cmds = parse_file('.\\command-sets\\winPopenCmds.txt')
+ssh_cmds = parse_file('.\\command-sets\\sshCmds.txt')
 
 def pshell_decoder(command_to_decode):
     # Runs pshell command and decodes the output
@@ -236,6 +238,17 @@ def cli():
                 time.sleep(1)
                 exit()
 
+            elif strip_cmd == 'calc':
+                subprocess.call('calc')
+
+            elif strip_cmd == 'igloo':
+                try:
+                    subprocess.call(['powershell.exe','Start \'C:\\Program Files\\Igloo\\igloo.exe\''])
+                except:
+                    newline()
+                    print('error~! File not found.')
+                    newline()
+
             # Compare user input against actionable commands. Send to
             # the appropriate command tree (a function) if there is a match.
             elif strip_cmd in show_cmds:
@@ -308,6 +321,15 @@ def cli():
 
             elif strip_cmd in ip_cmds:
                 ip_general(strip_cmd)
+
+            elif strip_cmd in ssh_cmds:
+                if 'write' in strip_cmd:
+                    ssh_write_init(strip_cmd)
+                elif 'show' in strip_cmd:
+                    print('matched command')
+                    ssh_show_init(strip_cmd)
+                else:
+                    pass
 
             # Allows newlines/returns in the terminal
             elif strip_cmd == '':
