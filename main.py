@@ -1,7 +1,10 @@
-import subprocess, os, sys, ctypes, netmiko, getpass, time, random
+import subprocess, os, sys, ctypes, netmiko, getpass, random
 import conversion, helpDict, showDict, winOsDict, winPopenDict, installDict
+from datetime import datetime
 from crypto import *
 from fwall import *
+from tcp import *
+from ipconf import *
 
 yes = ['y', 'Y', 'yes', 'Yes'] 
 no = ['n', 'N', 'no', 'No']
@@ -41,7 +44,6 @@ fwall_general = parse_file('.\\command-sets\\fwallCmds.txt')
 fwall_show = parse_file('.\\command-sets\\fwallShowCmds.txt')
 install_cmds = parse_file('.\\command-sets\\installCmds.txt')
 ip_cmds = parse_file('.\\command-sets\\ipCmds.txt')
-net_cmds = parse_file('.\\command-sets\\netCmds.txt')
 show_cmds = parse_file('.\\command-sets\\showCmds.txt')
 win_os_cmds = parse_file('.\\command-sets\\winOsCmds.txt')
 win_popen_cmds = parse_file('.\\command-sets\\winPopenCmds.txt')
@@ -238,22 +240,30 @@ def cli():
             # the appropriate command tree (a function) if there is a match.
             elif strip_cmd in show_cmds:
                 show_tree(strip_cmd)
+
             elif strip_cmd in win_os_cmds:
                 win_os_tree(strip_cmd)
+
             elif strip_cmd in win_popen_cmds:
                 win_popen_tree(strip_cmd)
+
             elif strip_cmd in crypto_general:
                 crypto_tree(strip_cmd)
+
             elif 'crypto del' in strip_cmd:
                 # A redundant entry is necessary due to the variable
                 # nature of certain commands.
                 crypto_tree(strip_cmd)
+
             elif 'crypto connect' in strip_cmd:
                 crypto_tree(strip_cmd)
+
             elif strip_cmd in fwall_show:
                 fwall_display(strip_cmd)
+
             elif strip_cmd in fwall_general:
                 fwall_toggle(strip_cmd)
+
             elif 'fwall entry' in strip_cmd:
                 if len(split_cmd) == 7:
                     fwall_rule_config(split_cmd)
@@ -263,19 +273,51 @@ def cli():
                     newline()
                     read_file('.\\help-files\\helpFwallEntry.txt')
                     pass
+
             elif strip_cmd in install_cmds:
                 install_tree(strip_cmd)
+
+            elif 'tcp connect' in strip_cmd:
+                tcp_connect(strip_cmd)
+
+            elif 'tcp scan' in strip_cmd:
+                tcp_scan(strip_cmd)
+
+            elif strip_cmd == 'tcp reset':
+                net_reset()
+
+            elif 'no ip route' in strip_cmd:
+                no_ip_route(strip_cmd)
+
+            elif 'ip route-cache' in strip_cmd:
+                ip_route_cache(strip_cmd)
+
+            elif 'ip ttl' in strip_cmd:
+                ip_ttl(strip_cmd)
+
+            elif 'ip address dhcp' in strip_cmd:
+                ip_address_dhcp(strip_cmd)
+
+            elif 'ip address' in strip_cmd:
+                ip_address_config(strip_cmd)
+
+            elif 'ip tcp window-restart' in strip_cmd \
+            or 'ip tcp provider' in strip_cmd \
+            or 'ip tcp port-range' in strip_cmd:
+                ip_tcp_config(strip_cmd)
+
             elif strip_cmd in ip_cmds:
-                ip_general_tree(strip_cmd)
-            elif strip_cmd in net_cmds:
-                net_general_tree(strip_cmd)
+                ip_general(strip_cmd)
+
             # Allows newlines/returns in the terminal
             elif strip_cmd == '':
                 pass
+
             else:
                 newline()
                 print('error~! Invalid command.')
                 newline()
+
         except:
             continue
 

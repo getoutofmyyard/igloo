@@ -1,20 +1,19 @@
-ip address
-ip address
-ip address
-ip icmp
-ip icmp
-ip igmp
-ip igmp
-ip metric
-ip metric
-ip multicast
-ip multicast
-ip route
-ip route
-ip source-route
-ip source-route
-ip tcp
-ip tcp
-ip ttl
-ip ttl
-no ip route
+ip icmp redirect enable
+ip icmp redirect disable
+ip igmp version 1
+ip igmp version 2
+ip igmp version 3
+ip multicast enable
+ip multicast disable
+ip source-route forward
+ip source-route receive-only
+ip source-route drop
+ip tcp timestamp enable
+ip tcp timestamp disable
+ip tcp ecn enable
+ip tcp ecn disable
+ip tcp mpp enable
+ip tcp mpp disable
+ip tcp auto-tune disable
+ip tcp auto-tune restrict
+ip tcp auto-tune normal
