@@ -9,7 +9,7 @@ fwall               - firewall configuration
 install             - install Windows Server features
 ip                  - ipv4 configuration options
 igloo               - open another instance of igloo
-man					- open manual from easyigloo.org
+man                 - open manual from easyigloo.org
 notepad             - open notepad
 nslookup            - perform dns lookups
 ping                - ping utility
