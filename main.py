@@ -1,5 +1,6 @@
-import subprocess, os, sys, ctypes, netmiko, getpass, random
+import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser
 import conversion, helpDict, showDict, winOsDict, winPopenDict, installDict
+import webDict
 from datetime import datetime
 from crypto import *
 from fwall import *
@@ -326,10 +327,18 @@ def cli():
                 if 'write' in strip_cmd:
                     ssh_write_init(strip_cmd)
                 elif 'show' in strip_cmd:
-                    print('matched command')
                     ssh_show_init(strip_cmd)
                 else:
                     pass
+
+            elif 'web' in strip_cmd:
+                for line in webDict.web_dictionary:
+                    if line == strip_cmd:
+                        key = webDict.web_dictionary.get(line)
+                        webbrowser.open_new(key)
+                        newline()
+                    else:
+                        pass
 
             # Allows newlines/returns in the terminal
             elif strip_cmd == '':
