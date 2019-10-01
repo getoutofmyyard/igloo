@@ -1,6 +1,6 @@
 import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser
 import conversion, helpDict, showDict, winOsDict, winPopenDict, installDict
-import webDict
+import webDict, uninstallDict
 from datetime import datetime
 from crypto import *
 from fwall import *
@@ -199,28 +199,55 @@ def crypto_tree(crypto_command):
             pass
 
 def install_tree(install_command):
-    # Search winPopenDict.py for relevant command.
+    # Search installlDict.py for relevant command.
     newline()
+
+    split_command = install_command.split(' ')
+    if len(split_command) == 3:
+        feature = split_command[2]
+    elif len(split_command) == 4:
+        feature == split_command[2] + ' ' + split_command[3]
+
     try:
         for command in installDict.install_dictionary:
             if command == install_command:
-                print('notify~! Attempting installation...')
-                newline()
-                subprocess.call(installDict.install_dictionary.get(command))
+                print('notify~! Installing \'{}\'. Please wait...'.format(feature))
+                install_feature = pshell_decoder(installDict.install_dictionary.get(command))
+                if 'WARNING:' in install_feature:
+                    print('notify~! Installed \'{}\' successfully! Use \'win reboot\' to finish the installation.'.format(feature))
+                    newline()
+                else:
+                    print('notify~! Installed \'{}\' successfully!'.format(feature))
+                    newline()
             else:
                 pass
     except:
+        newline()
+        print('error~! An exception occurred. Terminating operation.')
+        newline()
         pass
 
 def uninstall_tree(uninstall_command):
-    # Search winPopenDict.py for relevant command.
+    # Search uninstallDict.py for relevant command.
     newline()
+
+    split_command = uninstall_command.split(' ')
+    if len(split_command) == 3:
+        feature = split_command[2]
+    elif len(split_command) == 4:
+        feature == split_command[2] + ' ' + split_command[3]
+
     try:
         for command in uninstallDict.uninstall_dictionary:
             if command == uninstall_command:
-                print('notify~! Attempting installation...')
-                newline()
-                subprocess.call(uninstallDict.uninstall_dictionary.get(command))
+                print('notify~! Uninstalling \'{}\'. Please wait...'.format(feature))
+                uninstall_feature = pshell_decoder(uninstallDict.uninstall_dictionary.get(command))
+                if 'WARNING:' in uninstall_feature:
+                    print('notify~! Uninstalled \'{}\' successfully! Use \'win reboot\' to finish the installation.'.format(feature))
+                    newline()
+                else:
+                    print('notify~! Uninstalled \'{}\' successfully!'.format(feature))
+                    newline()
             else:
                 pass
     except:
