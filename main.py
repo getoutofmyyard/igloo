@@ -8,6 +8,7 @@ from tcp import *
 from ipconf import *
 from sshSet import *
 from updateWindows import *
+from winInstallers import *
 
 yes = ['y', 'Y', 'yes', 'Yes'] 
 no = ['n', 'N', 'no', 'No']
@@ -198,61 +199,6 @@ def crypto_tree(crypto_command):
         else:
             pass
 
-def install_tree(install_command):
-    # Search installlDict.py for relevant command.
-    newline()
-
-    split_command = install_command.split(' ')
-    if len(split_command) == 3:
-        feature = split_command[2]
-    elif len(split_command) == 4:
-        feature == split_command[2] + ' ' + split_command[3]
-
-    try:
-        for command in installDict.install_dictionary:
-            if command == install_command:
-                print('notify~! Installing \'{}\'. Please wait...'.format(feature))
-                install_feature = pshell_decoder(installDict.install_dictionary.get(command))
-                if 'WARNING:' in install_feature:
-                    print('notify~! Installed \'{}\' successfully! Use \'win reboot\' to finish the installation.'.format(feature))
-                    newline()
-                else:
-                    print('notify~! Installed \'{}\' successfully!'.format(feature))
-                    newline()
-            else:
-                pass
-    except:
-        newline()
-        print('error~! An exception occurred. Terminating operation.')
-        newline()
-        pass
-
-def uninstall_tree(uninstall_command):
-    # Search uninstallDict.py for relevant command.
-    newline()
-
-    split_command = uninstall_command.split(' ')
-    if len(split_command) == 3:
-        feature = split_command[2]
-    elif len(split_command) == 4:
-        feature == split_command[2] + ' ' + split_command[3]
-
-    try:
-        for command in uninstallDict.uninstall_dictionary:
-            if command == uninstall_command:
-                print('notify~! Uninstalling \'{}\'. Please wait...'.format(feature))
-                uninstall_feature = pshell_decoder(uninstallDict.uninstall_dictionary.get(command))
-                if 'WARNING:' in uninstall_feature:
-                    print('notify~! Uninstalled \'{}\' successfully! Use \'win reboot\' to finish the installation.'.format(feature))
-                    newline()
-                else:
-                    print('notify~! Uninstalled \'{}\' successfully!'.format(feature))
-                    newline()
-            else:
-                pass
-    except:
-        pass
-
 def cli():
     # CLI prompts user for input as long as prompt_keepalive == 1
     prompt_keepalive = 1
@@ -330,6 +276,12 @@ def cli():
                     newline()
                     read_file('.\\help-files\\helpFwallEntry.txt')
                     pass
+
+            elif 'uninstall-pkg' in strip_cmd:
+                uninstall_tree(strip_cmd)
+
+            elif 'install-pkg' in strip_cmd:
+                install_tree(strip_cmd)
 
             elif strip_cmd in install_cmds:
                 install_tree(strip_cmd)
