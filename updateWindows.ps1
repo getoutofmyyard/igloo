@@ -53,10 +53,12 @@ Else {
 		Try {
 			$Track = $Installer.Install()
 			Write-Host "notify~! Windows updates were installed successfully."
+			Write-Host
 		}
 		Catch {
 			[System.Exception]
 			Write-Host "error~! Update failed with the following error: $Error()"
+			Write-Host
 			$Error.Clear()
 		}	
 	}

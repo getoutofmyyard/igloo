@@ -1,6 +1,6 @@
-			
+            
 88             88                          
-	       88                          
+               88                          
 88  ,adPPYb,d8 88  ,adPPYba,   ,adPPYba,   
 88 a8"    `Y88 88 a8"     "8a a8"     "8a  
 88 8b       88 88 8b       d8 8b       d8  
@@ -8,10 +8,23 @@
 88  `"YbbdP"Y8 88  `"YbbdP"'   `"YbbdP"'   
 aa,        ,88                             
      "Y8bbdP"                   
-           			
+                    
 
 Igloo makes life easy.
 
-Version 3
-05/27/2019
+Version 4
+10/03/2019
+
+Igloo is an open-source application designed to improve workflows for desktop support professionals and 
+systems administrators.
+
+With its simple and intuitive command set, Igloo allows users to configure VPN clients, create firewall rules, 
+install Windows Server features, collect SSH command output from a list of network devices, configure advanced 
+TCP/IP settings, and more- all without the need to click through GUI windows or research esoteric PowerShell commands.
+
+Enter an incomplete command or use '?' after a command to see more options.
+
+Thanks for giving Igloo a try. I hope it makes life easy.
+
+- Jared Elliott
 

@@ -109,6 +109,54 @@ def generate_psk():
     print(pw_string)
     newline()
 
+
+def format_certificate(dc, san):
+
+    for item in dc:
+        dc_formatted = 'DC={}'.format(item)
+        for another_item in san:
+            san_formatted = 'upn={}'.format(another_item)
+            return dc_formatted, san_formatted
+
+def generate_rsa():
+    try:
+        newline()
+        print('notify~! Use commas to separate multiple entries')
+        newline()
+        cn = input('input~! DNS common name: ')
+        ou = input('input~! Active Directory OU: ')
+        san = input('input~! SAN: ')
+        dc =  input('input~! DC: ')
+
+        strip_cn = cn.rstrip(' ')
+        strip_ou = ou.rstrip(' ')
+        strip_dc = dc.rstrip(' ')
+        split_dc = strip_dc.split(',')
+        strip_san = san.rstrip(' ')
+        split_san = strip_san.split(',')
+
+        dc_format, san_format = format_certificate(split_dc, split_san)
+
+        create_cert = pshell_decoder('New-SelfSignedCertificate -Type Custom -Subject \
+        \"CN={},OU={},{}\" -TextExtension @(\"2.5.29.37={}1.3.6.1.5.5.7.3.2\"\
+        ,\"2.5.29.17={}{}\") -KeyUsage DigitalSignature -KeyAlgorithm\
+         RSA -KeyLength 2048 -CertStoreLocation \"Cert:\\LocalMachine\\My\"'.format(strip_cn, \
+        strip_ou, dc_format, '{text}', '{text}', san_format))
+
+        if '   PSParentPath:' in create_cert:
+            newline()
+            print('notify~! Self-signed certificate created and stored in \"Cert:\\LocalMachine\\My\" (Computer Certificates > Personal)')
+            newline()
+        else:
+            newline()
+            print('error~! Failed to create certificate')
+            newline()
+
+    except:
+        newline()
+        print('error~! Operation terminated')
+        newline()
+
 def crypto_go(vpn_to_connect):
     newline()
     subprocess.Popen('rasphone -d ' + vpn_to_connect)

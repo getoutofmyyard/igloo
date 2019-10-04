@@ -1,4 +1,5 @@
-import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser, asyncio
+import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser
+import asyncio, re
 import conversion, helpDict, showDict, winOsDict, winPopenDict, installDict
 import webDict, uninstallDict
 from datetime import datetime
@@ -56,7 +57,8 @@ ssh_cmds = parse_file('.\\command-sets\\sshCmds.txt')
 
 def pshell_decoder(command_to_decode):
     # Runs pshell command and decodes the output
-    get_output = subprocess.Popen(['powershell.exe', command_to_decode], stdout=subprocess.PIPE)
+    get_output = subprocess.Popen(['powershell.exe', command_to_decode],\
+    stdout=subprocess.PIPE)
     decoded_output = get_output.communicate()[0].decode('iso-8859-1')
     return decoded_output
 
@@ -72,7 +74,8 @@ def admin_check():
             input_loop = 0
             newline()
             while input_loop == 0:
-                elevate_me = input('input~! Restart with elevated privileges? (y/n) ')
+                elevate_me = input('input~! Restart with elevated privileges?'\
+                +' (y/n) ')
                 if elevate_me in yes:
                     os_run('powershell Start-Process .\\igloo.exe \
                            -Verb runAs Administrator')
@@ -184,6 +187,8 @@ def crypto_tree(crypto_command):
         crypto_pptp_options(crypto_command)
     elif crypto_command == 'crypto generate psk':
         generate_psk()
+    elif crypto_command == 'crypto generate rsa':
+        generate_rsa()
     elif 'crypto del' in crypto_command:
         split_command = crypto_command.split(' ')
         if len(split_command) == 3:
@@ -196,8 +201,51 @@ def crypto_tree(crypto_command):
         if len(split_command) == 3:
             vpn_name = split_command[2]
             crypto_go(vpn_name)
+
         else:
             pass
+
+def int_tree(int_command):
+
+    split_cmd = int_command.split(' ')
+    int_index = split_cmd[2]
+
+    if 'enable' in int_command:
+        get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name, ifIndex | Format-List'.format(int_index))
+
+        split_list = get_int_list.split()
+        int_name = split_list[2]
+
+        enable_adapter = pshell_decoder('Enable-NetAdapter -Name {}'.format(int_name))
+
+        if 'Enable-NetAdapter' in enable_adapter:
+            newline()
+            print('notify~! Interface does not exist. Use \'show int\' and \'int ?\' for help')
+            newline()
+        else:
+            newline()
+            print('notify~! Interface {} has been enabled'.format(int_name))
+            newline()
+
+    elif 'disable' in int_command:
+        split_cmd = int_command.split(' ')
+        int_index = split_cmd[2]
+
+        get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name, ifIndex | Format-List'.format(int_index))
+
+        split_list = get_int_list.split()
+        int_name = split_list[2]
+
+        disable_adapter = pshell_decoder('Disable-NetAdapter -Name {} -Confirm:$False'.format(int_name))
+
+        if 'Disable-NetAdapter' in disable_adapter:
+            newline()
+            print('notify~! Interface does not exist. Use \'show int\' and \'int ?\' for help')
+            newline()
+        else:
+            newline()
+            print('notify~! Interface {} has been disabled'.format(int_name))
+            newline()
 
 def cli():
     # CLI prompts user for input as long as prompt_keepalive == 1
@@ -286,6 +334,9 @@ def cli():
 
             elif strip_cmd in uninstall_cmds:
                 uninstall_tree(strip_cmd)
+
+            elif 'int' in strip_cmd:
+                int_tree(strip_cmd)
 
             elif 'tcp connect' in strip_cmd:
                 tcp_connect(strip_cmd)
