@@ -11,7 +11,7 @@ def pshell_decoder(command_to_decode):
 
 def update_windows():
     newline()
-    print('notify~! Checking local execution policy')
+    print('notify~! Checking local execution policy...')
     execution_policy = pshell_decoder('Get-ExecutionPolicy')
 
     if 'Restricted' in execution_policy \
@@ -21,9 +21,8 @@ def update_windows():
         newline()
 
     else:
-        print('notify~! Unblocking file path')
+        print('notify~! Unblocking file path...')
         unblock = pshell_decoder('Unblock-File -Path .\\updateWindows.ps1 | Out-Null')
         error = "cannot be loaded"
-        print('notify~! Searching for updates')
+        print('notify~! Searching for updates...')
         subprocess.call(['powershell.exe', '.\\updateWindows.ps1'])
-        newline()

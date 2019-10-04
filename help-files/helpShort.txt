@@ -7,7 +7,6 @@ crypto              - vpn and other security-related options
 ftp                 - initiate an ftp connection
 fwall               - firewall configuration
 install             - install Windows Server features
-install-pkg         - install Windows Server feature packages
 ip                  - ipv4 configuration options
 igloo               - open another instance of igloo
 man                 - open manual from easyigloo.org

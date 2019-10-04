@@ -1,4 +1,4 @@
-import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser
+import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser, asyncio
 import conversion, helpDict, showDict, winOsDict, winPopenDict, installDict
 import webDict, uninstallDict
 from datetime import datetime
@@ -233,7 +233,11 @@ def cli():
 
             elif strip_cmd == 'igloo':
                 try:
-                    subprocess.call(['powershell.exe','Start \'C:\\Program Files\\Igloo\\igloo.exe\''])
+                    newline()
+                    try_exe = pshell_decoder('Start \'C:\\Program Files\\Igloo\\igloo.exe\'')
+                    if 'Start' in try_exe:
+                        print('error~! File not found!')
+                    newline()
                 except:
                     newline()
                     print('error~! File not found.')
@@ -276,12 +280,6 @@ def cli():
                     newline()
                     read_file('.\\help-files\\helpFwallEntry.txt')
                     pass
-
-            elif 'uninstall-pkg' in strip_cmd:
-                uninstall_tree(strip_cmd)
-
-            elif 'install-pkg' in strip_cmd:
-                install_tree(strip_cmd)
 
             elif strip_cmd in install_cmds:
                 install_tree(strip_cmd)
