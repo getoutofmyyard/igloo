@@ -17,6 +17,6 @@ win_popen_command_set = {
 	'win rdp':'mstsc.exe',
 	'win info':'msinfo32.exe',
 	'win font':'control fonts',
-	'win defrag':'dfg',
+	'win defrag':'dfrgui',
 	'win gpupdate':'gpupdate /force'
 }

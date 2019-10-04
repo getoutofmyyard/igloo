@@ -132,6 +132,8 @@ help_dictionary = {
     'ip ttl ?':'.\\help-files\\helpIpTtl.txt',
     'ip ttl':'.\\help-files\\helpIpTtl.txt',
     'ip':'.\\help-files\\helpIp.txt',
+    'man':'.\\help-files\\man.txt',
+    'man ?':'.\\help-files\\man.txt',
     'net ?':'.\\help-files\\helpNet.txt',
     'net':'.\\help-files\\helpNet.txt',
     'no ip route':'.\\help-files\\helpIpRouteRemove.txt',

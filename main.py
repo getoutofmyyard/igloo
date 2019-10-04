@@ -389,6 +389,9 @@ def cli():
                     else:
                         pass
 
+            elif strip_cmd == 'notepad':
+                subprocess.call(['notepad.exe'])
+
             elif strip_cmd == 'update':
                 update_windows()
 
