@@ -1,4 +1,0 @@
-powershell
-powershell ?
-powershell policy
-powershell policy ?
