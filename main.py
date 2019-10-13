@@ -86,6 +86,7 @@ def admin_check():
                     subprocess.call(['powershell.exe','Start-Process .\\igloo.exe \
                            -Verb runAs Administrator'])
                     input_loop = 1
+                    exit()
 
                 elif elevate_me in no:
                     input_loop = 1

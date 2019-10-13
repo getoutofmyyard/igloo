@@ -154,7 +154,7 @@ def ip_address_config(ip_address_arg):
 
         if 'Default loopback address cannot be deleted' in remove_address:
             newline()
-            print('error~! Cannot remove the default loopback address.')
+            print('error~! Cannot change the default loopback address.')
             newline()
 
         else:
@@ -176,10 +176,17 @@ def ip_address_config(ip_address_arg):
                 + interface_index +' -IPAddress ' + ip_address + ' -PrefixLength ' \
                 + cidr_lookup + ' | Out-Null')
 
+                print('notify~! Restarting adapter')
+                get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(interface_index))
+                split_list = get_int_list.split('----')
+                get_name = split_list[1]
+                int_name = '\'' + get_name.strip() + '\''
+                reset_adapter = pshell_decoder('Restart-NetAdapter -Name'\
+                +' {}'.format(int_name))
+
                 if 'Inconsistent parameters PolicyStore' in assign_address:
                     newline()
-                    print('error~! Interface \'{}\' is disabled. Please enable'\
-                    +' it and try again.'.format(interface_index))
+                    print('error~! Interface \'{}\' is disabled. Please enable it and try again.'.format(interface_index))
                     newline()
 
                 elif 'The object already exists.' in assign_address:
@@ -188,24 +195,26 @@ def ip_address_config(ip_address_arg):
                     newline()
                 else:
                     newline()
-                    print('notify~! IP address %s/%s has been configured for the'\
-                    + ' interface. GW=%s' % ip_address,cidr_lookup, default_gateway)
+                    print('notify~! IP address {}/{} has been configured for the interface. GW={}'.format(ip_address,cidr_lookup, default_gateway))
                     newline()
             else:
                 pass
 
-    elif len(split_arg) == 5:
+    elif len(split_arg) == 5 \
+    and '255' in split_arg[3]:
         ip_address = split_arg[2]
         subnet_mask = split_arg[3]
         interface_index = split_arg[4]
 
         cidr_lookup = cidr_dictionary.get(subnet_mask,\
                       '\nnotify~! Invalid subnet mask.\n')
-
+        newline()
+        print('notify~! Clearing interface IP config')
         subprocess.call(['powershell.exe', 'Remove-NetIpAddress'\
         + ' -InterfaceIndex '+interface_index+' -AddressFamily '\
         + 'IPv4 -Confirm:$False | Out-Null'])
 
+        print('notify~! Configuring interface IP')
         assign_address = pshell_decoder('New-NetIPAddress '+ '-InterfaceIndex'\
         + ' '  + interface_index + ' -IPAddress ' + ip_address + ' -PrefixLength'\
         + ' ' + cidr_lookup + ' | Out-Null')
@@ -216,12 +225,145 @@ def ip_address_config(ip_address_arg):
             newline()
 
         else:
+            print('notify~! Restarting adapter')
+
+            get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(interface_index))
+            split_list = get_int_list.split('----')
+            get_name = split_list[1]
+            int_name = '\'' + get_name.strip() + '\''
+            reset_adapter = pshell_decoder('Restart-NetAdapter -Name {}'.format(int_name))
+
+            print('notify~! Address {}/{} has been configured.'.format(ip_address, cidr_dictionary.get(subnet_mask)))
             newline()
-            print('notify~! Address %s %s has been configured.'\
-                   % (ip_address, subnet_mask))
+
+    elif len(split_arg) == 4 \
+    and '/' in split_arg[2]:
+        prefix = split_arg[2]
+        split_prefix = prefix.split('/')
+        prefix_length = split_prefix[1]
+        ip_address = split_prefix[0]
+        interface_index = split_arg[3]
+
+        if int(prefix_length) < 1 \
+        or int(prefix_length) > 32:
             newline()
-    else:
-        pass
+            print('error~! Invalid prefix length. Range = 1 - 32')
+            newline()
+            pass
+
+        else:
+            newline()
+            print('notify~! Clearing interface IP config')
+            subprocess.call(['powershell.exe', 'Remove-NetIpAddress'\
+            + ' -InterfaceIndex '+interface_index+' -AddressFamily '\
+            + 'IPv4 -Confirm:$False | Out-Null'])
+
+            print('notify~! Configuring interface IP')
+            assign_address = pshell_decoder('New-NetIPAddress '+ '-InterfaceIndex'\
+            + ' '  + interface_index + ' -IPAddress ' + ip_address + ' -PrefixLength'\
+            + ' ' + prefix_length + ' | Out-Null')
+
+            if 'The object already exists.' in assign_address:
+                newline()
+                print('error~! Address overlaps with another interface.')
+                newline()
+
+            else:
+                print('notify~! Restarting adapter')
+
+                get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(interface_index))
+                split_list = get_int_list.split('----')
+                get_name = split_list[1]
+                int_name = '\'' + get_name.strip() + '\''
+                reset_adapter = pshell_decoder('Restart-NetAdapter -Name {}'.format(int_name))
+                print('notify~! Address {}/{} has been configured.'.format(ip_address, prefix_length))
+                newline()
+
+    elif len(split_arg) == 5 \
+    and '/' in split_arg[2] \
+    and '.' in split_arg[3]:
+        default_gateway = split_arg[3]
+        interface_index = split_arg[4]
+        prefix = split_arg[2]
+        split_prefix = prefix.split('/')
+        prefix_length = split_prefix[1]
+        ip_address = split_prefix[0]
+
+        if int(prefix_length) < 8 \
+        or int(prefix_length) > 32:
+            newline()
+            print('error~! Invalid prefix length. Range = 1 - 32')
+            newline()
+            pass
+        else:
+
+            newline()
+            print('notify~! Initializing route table lookup')
+
+            route_lookup = pshell_decoder('get-netroute -addressfamily ipv4 | '\
+                           +'select-object -property destinationprefix')
+
+            print('notify~! Route lookup succeeded')
+
+            if '0.0.0.0/0' in route_lookup.split('\n'):
+                print('notify~! Flushing old default route from table')
+                subprocess.call(['powershell', 'Remove-NetRoute -InterfaceIndex '\
+                +interface_index+' -destinationprefix 0.0.0.0/0 -Confirm:$False'\
+                + ' | Out-Null'])
+
+            remove_address = pshell_decoder('Remove-NetIpAddress -InterfaceIndex '\
+                           +interface_index+' -AddressFamily IPv4 -Confirm:$False | '\
+                           + 'Out-Null')
+
+            if 'Default loopback address cannot be deleted' in remove_address:
+                newline()
+                print('error~! Cannot change the default loopback address.')
+                newline()
+
+            else:
+                print('notify~! Configuring address')
+
+                subprocess.call(['powershell.exe','Set-NetIPInterface -InterfaceIndex'\
+                ' ' + interface_index + ' -Dhcp Disabled | Out-Null'])
+
+                print('notify~! Disabling DHCP')
+
+                gateway_config = pshell_decoder('New-NetIPAddress -InterfaceIndex '\
+                                 + interface_index +' -IPAddress '+ip_address \
+                                 +' -PrefixLength '+ prefix_length +' -DefaultGateway '\
+                                 + default_gateway)
+
+                if 'Instance DefaultGateway already exists' in gateway_config:
+
+                    assign_address = pshell_decoder('New-NetIPAddress -InterfaceIndex '\
+                    + interface_index +' -IPAddress ' + ip_address + ' -PrefixLength ' \
+                    + prefix_length + ' | Out-Null')
+
+                    print('notify~! Restarting adapter')
+                    get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(interface_index))
+                    split_list = get_int_list.split('----')
+                    get_name = split_list[1]
+                    int_name = '\'' + get_name.strip() + '\''
+                    reset_adapter = pshell_decoder('Restart-NetAdapter -Name'\
+                    +' {}'.format(int_name))
+
+                    if 'Inconsistent parameters PolicyStore' in assign_address:
+                        newline()
+                        print('error~! Interface \'{}\' is disabled. Please enable it and try again.'.format(interface_index))
+                        newline()
+
+                    elif 'The object already exists.' in assign_address:
+                        newline()
+                        print('error~! Address overlaps with another interface.')
+                        newline()
+                    else:
+                        newline()
+                        print('notify~! IP address {}/{} has been configured for the interface. GW={}'.format(ip_address,prefix_length, default_gateway))
+                        newline()
+                else:
+                    pass
+   # else:
+    #    pass
 
 def ip_address_dhcp(dhcp_arg):
 
