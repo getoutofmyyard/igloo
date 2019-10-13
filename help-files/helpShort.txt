@@ -1,16 +1,17 @@
 Use "?" after a command to see more options, e.g. "win ?"
             
-about               - information about Igloo
+about               - information about igloo
 calc                - calculator
-cls                 - clear the Igloo console
-crypto              - vpn and other security-related options
-ftp                 - initiate an ftp connection
+cls                 - clear the igloo console
+crypto              - vpn config and cert generation
+ftp                 - ftp client
 fwall               - firewall configuration
+igloo               - open another instance of igloo
 install             - install Windows Server features
 int                 - Toggle network interfaces
 ip                  - ipv4 configuration options
-igloo               - open another instance of igloo
 man                 - open manual from easyigloo.org
+netsh               - net shell
 notepad             - open notepad
 nslookup            - perform dns lookups
 ping                - ping utility
@@ -18,7 +19,8 @@ powershell          - powershell commands
 show                - display logs, configurations, and other statistics
 ssh                 - autorun cli commands over a list of devices
 tcp                 - network tools
-tftp                - trivial file transfer protocol
+telnet              - telnet client
+tftp                - tftp client
 tracert             - tracert utility
 uninstall           - uninstall Windows Server features
 update              - download and install windows updates

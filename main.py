@@ -15,6 +15,12 @@ yes = ['y', 'Y', 'yes', 'Yes']
 no = ['n', 'N', 'no', 'No']
 quit = ['exit','end','bye','quit','leave','esc']
 
+
+#Common cmd.exe commands. Checked against user input
+#and invokes cmd.exe when these terms are discovered
+cmd_exe_options = ['tftp','ftp','telnet','netsh','nslookup',\
+                   'ping','tracert']
+
 def newline():
     print('')
 
@@ -406,6 +412,14 @@ def cli():
 
             elif strip_cmd == 'update':
                 update_windows()
+
+            elif split_cmd[0] in cmd_exe_options:
+                try:
+                    os.system(strip_cmd)
+                    newline()
+                except KeyboardInterrupt:
+                    newline()
+                    newline()
 
             # Allows newlines/returns in the terminal
             elif strip_cmd == '':

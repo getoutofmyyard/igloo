@@ -3,11 +3,6 @@
 
 win_os_command_set = {
 	'cls':'cls',
-	'tftp':'tftp',
-	'ftp':'ftp',
-	'telnet':'telnet',
-	'netsh':'netsh',
-	'nslookup':'nslookup',
 	'powershell policy as':'powershell Set-ExecutionPolicy -ExecutionPolicy AllSigned',
 	'powershell policy open':'powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted',
 	'powershell policy remote':'powershell Set-ExecutionPolicy -ExecutionPolicy RemoteSigned',

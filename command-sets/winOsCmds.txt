@@ -1,9 +1,4 @@
 cls
-tftp
-ftp
-telnet
-nslookup
-netsh
 win app
 win blu
 win dev
