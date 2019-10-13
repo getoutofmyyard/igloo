@@ -170,19 +170,20 @@ def ip_address_config(ip_address_arg):
                              +' -PrefixLength '+ cidr_lookup +' -DefaultGateway '\
                              + default_gateway)
 
+            print('notify~! Restarting adapter')
+            get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(interface_index))
+            split_list = get_int_list.split('----')
+            get_name = split_list[1]
+            int_name = '\'' + get_name.strip() + '\''
+            reset_adapter = pshell_decoder('Restart-NetAdapter -Name'\
+            +' {}'.format(int_name))
+
+
             if 'Instance DefaultGateway already exists' in gateway_config:
 
                 assign_address = pshell_decoder('New-NetIPAddress -InterfaceIndex '\
                 + interface_index +' -IPAddress ' + ip_address + ' -PrefixLength ' \
                 + cidr_lookup + ' | Out-Null')
-
-                print('notify~! Restarting adapter')
-                get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(interface_index))
-                split_list = get_int_list.split('----')
-                get_name = split_list[1]
-                int_name = '\'' + get_name.strip() + '\''
-                reset_adapter = pshell_decoder('Restart-NetAdapter -Name'\
-                +' {}'.format(int_name))
 
                 if 'Inconsistent parameters PolicyStore' in assign_address:
                     newline()
@@ -321,31 +322,28 @@ def ip_address_config(ip_address_arg):
                 newline()
 
             else:
-                print('notify~! Configuring address')
-
+                print('notify~! Disabling DHCP')
                 subprocess.call(['powershell.exe','Set-NetIPInterface -InterfaceIndex'\
                 ' ' + interface_index + ' -Dhcp Disabled | Out-Null'])
 
-                print('notify~! Disabling DHCP')
-
+                print('notify~! Configuring address')
                 gateway_config = pshell_decoder('New-NetIPAddress -InterfaceIndex '\
                                  + interface_index +' -IPAddress '+ip_address \
                                  +' -PrefixLength '+ prefix_length +' -DefaultGateway '\
                                  + default_gateway)
+
+                print('notify~! Restarting adapter')
+                get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(interface_index))
+                split_list = get_int_list.split('----')
+                get_name = split_list[1]
+                int_name = '\'' + get_name.strip() + '\''
+                reset_adapter = pshell_decoder('Restart-NetAdapter -Name {}'.format(int_name))
 
                 if 'Instance DefaultGateway already exists' in gateway_config:
 
                     assign_address = pshell_decoder('New-NetIPAddress -InterfaceIndex '\
                     + interface_index +' -IPAddress ' + ip_address + ' -PrefixLength ' \
                     + prefix_length + ' | Out-Null')
-
-                    print('notify~! Restarting adapter')
-                    get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(interface_index))
-                    split_list = get_int_list.split('----')
-                    get_name = split_list[1]
-                    int_name = '\'' + get_name.strip() + '\''
-                    reset_adapter = pshell_decoder('Restart-NetAdapter -Name {}'.format(int_name))
-
 
                     if 'Inconsistent parameters PolicyStore' in assign_address:
                         newline()
