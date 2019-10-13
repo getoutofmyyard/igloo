@@ -72,7 +72,7 @@ def uninstall_tree(uninstall_command):
                 elif 'ArgumentNotValid:' in uninstall_feature:
                     print('notify~! Feature \'{}\' is not installed'.format(feature))
                     newline()
-                elif 'Uninstall-WindowsFeature' in install_feature:
+                elif 'Uninstall-WindowsFeature' in uninstall_feature:
                     print('notify~! This command is supported only on Windows Server machines')
                     newline()
                 else:
