@@ -83,10 +83,10 @@ def admin_check():
                 elevate_me = input('input~! Restart with elevated privileges?'\
                 +' (y/n) ')
                 if elevate_me in yes:
-                    os_run('powershell Start-Process .\\igloo.exe \
-                           -Verb runAs Administrator')
+                    subprocess.call(['powershell.exe','Start-Process .\\igloo.exe \
+                           -Verb runAs Administrator'])
                     input_loop = 1
-                    exit()
+
                 elif elevate_me in no:
                     input_loop = 1
                     newline()
