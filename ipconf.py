@@ -344,8 +344,8 @@ def ip_address_config(ip_address_arg):
                     split_list = get_int_list.split('----')
                     get_name = split_list[1]
                     int_name = '\'' + get_name.strip() + '\''
-                    reset_adapter = pshell_decoder('Restart-NetAdapter -Name'\
-                    +' {}'.format(int_name))
+                    reset_adapter = pshell_decoder('Restart-NetAdapter -Name {}'.format(int_name))
+
 
                     if 'Inconsistent parameters PolicyStore' in assign_address:
                         newline()
