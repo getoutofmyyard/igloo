@@ -10,6 +10,7 @@ from ipconf import *
 from sshSet import *
 from updateWindows import *
 from winInstallers import *
+from fping import *
 
 yes = ['y', 'Y', 'yes', 'Yes'] 
 no = ['n', 'N', 'no', 'No']
@@ -413,6 +414,9 @@ def cli():
 
             elif strip_cmd == 'update':
                 update_windows()
+
+            elif 'fping' in strip_cmd:
+                fping_script()
 
             elif split_cmd[0] in cmd_exe_options:
                 try:
