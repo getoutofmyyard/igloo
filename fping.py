@@ -19,7 +19,6 @@ def fping_script():
         my_devices = input('input~! Specify the full path to your device list: ')
         strip_devices = my_devices.strip(' ')
         no_quotes = strip_devices.strip('\'"') 
-        add_quotes = '\"' + no_quotes + '\"'
         if any(my_devices) == True:
             loop_keepalive = 0
             break
@@ -27,7 +26,7 @@ def fping_script():
     newline()
     print('notify~! Pinging device list...')
 
-    with open(add_quotes,'r') as file:
+    with open(no_quotes,'r') as file:
 
         newline()
 

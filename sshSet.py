@@ -31,8 +31,6 @@ def ssh_connections(devs, cmd, usr, pwd, os_plat):
 
     with open(devs,'r') as file:
         read_device_file = file.read()
-
-
         split_file = read_device_file.split('\n')
         for a_device in split_file:
             network_device = {
@@ -90,8 +88,7 @@ def ssh_show_init(ssh_command):
         while loop_keepalive == 1:
             my_devices = input('input~! Specify the path to your device list: ')
             strip_devices = my_devices.strip(' ')
-            no_quotes = strip_devices.strip('\'"')
-            add_quotes = '\"' + no_quotes + '\"'
+            no_quotes = strip_devices.strip('\'"') 
             if any(my_devices) == True:
                 loop_keepalive = 0
                 break
@@ -120,7 +117,7 @@ def ssh_show_init(ssh_command):
                 password_keepalive = 0
                 break
 
-        ssh_connections(add_quotes, command, username, password, os_platform)
+        ssh_connections(no_quotes, command, username, password, os_platform)
 
     except:
         newline()
@@ -140,8 +137,6 @@ def ssh_connections_write(devices, command, username, password, directory, os):
         read_device_file = file.read()
         split_file = read_device_file.split('\n')
 
-        newline()
-
         for device in split_file:
             network_device = {
             'device_type':os,
@@ -157,7 +152,9 @@ def ssh_connections_write(devices, command, username, password, directory, os):
             path = directory + '\\' + device
 
             with open(path, 'w+') as saved_file:
+                newline()
                 print('Saving file '+ path +'.txt')
+                newline()
                 write_output = saved_file.write(output)
 
             net_connect.disconnect()
@@ -191,8 +188,7 @@ def ssh_write_init(ssh_write_command):
             while device_keepalive == 1:
                 my_devices = input('input~! Specify the path to your device list: ')
                 strip_devices = my_devices.strip(' ')
-                devices_clean = strip_devices.strip('\'"')
-                add_dev_quotes = '\"' + devices_clean + '\"' 
+                devices_clean = strip_devices.strip('\'"') 
                 if any(my_devices) == True:
                     loop_keepalive = 0
                     break
@@ -201,8 +197,7 @@ def ssh_write_init(ssh_write_command):
             while dest_keepalive == 1:
                 my_directory = input('input~! Specify the destination directory path: ')
                 strip_dir = my_directory.strip(' ')
-                dir_clean = strip_dir.strip('\'"')
-                add_dir_quotes = '\"' + dir_clean + '\"'
+                dir_clean = strip_dir.strip('\'"') 
                 if any(my_directory) == True:
                     dest_keepalive = 0
                     break
@@ -229,7 +224,7 @@ def ssh_write_init(ssh_write_command):
                     break
 
             if 'show' in ssh_cmd:
-                ssh_connections_write(add_dev_quotes, ssh_cmd, user, passwd, add_dir_quotes, os_platform)
+                ssh_connections_write(devices_clean, ssh_cmd, user, passwd, dir_clean, os_platform)
             else:
                 print('\nerror~! Command rejected. This application supports \'show\' commands only.')
 
