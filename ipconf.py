@@ -25,9 +25,7 @@ def provider_announcement(tcp_provider):
 def no_ip_route(delete_this_route):
     split_arg = delete_this_route.split(' ')
     dest_prefix = split_arg[3]
-    rm_route = pshell_decoder('Remove-NetRoute -DestinationPrefix ' \
-               + dest_prefix +' -Confirm:$false')
-    print(rm_route)
+    rm_route = pshell_decoder('Remove-NetRoute -DestinationPrefix '+dest_prefix +' -Confirm:$false')
     if 'No MSFT_NetRoute objects found' in rm_route:
         newline()
         print('error~! Route does not exist in table.')
@@ -49,9 +47,7 @@ def ip_route(add_this_route):
         next_hop = split_arg[3]
         int_index = split_arg[4]
         route_metric = split_arg[6]
-        add_route = pshell_decoder('new-netroute -DestinationPrefix \'' + \
-                    dest_prefix + '\' -ifIndex ' +int_index + ' -NextHop '\
-                    + next_hop +' -RouteMetric '+route_metric)
+        add_route = pshell_decoder('new-netroute -DestinationPrefix '+dest_prefix+' -ifIndex ' +int_index + ' -NextHop '+ next_hop +' -RouteMetric ' + route_metric)
         if 'Instance MSFT_NetRoute already exists' in add_route:
             newline()
             print('error~! Route to destination prefix %s already in table.'\
@@ -64,16 +60,13 @@ def ip_route(add_this_route):
             newline()
 
     elif len(split_arg) == 5 \
-        or len(split_arg) == 6 \
-        and not 'metric' in split_arg:
+    and 'metric' not in split_arg:
 
         dest_prefix = split_arg[2]
         next_hop = split_arg[3]
         int_index = split_arg[4]
 
-        add_route = pshell_decoder('new-netroute -DestinationPrefix \''\
-                   +dest_prefix+'\' -ifIndex '+int_index+' -NextHop '\
-                   +next_hop+' | Out-Null')
+        add_route = pshell_decoder('new-netroute -DestinationPrefix '+dest_prefix+' -ifIndex '+int_index+' -NextHop '+next_hop+' | Out-Null')
 
         if 'Instance MSFT_NetRoute already exists' in add_route:
             newline()

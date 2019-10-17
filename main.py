@@ -370,6 +370,9 @@ def cli():
             elif 'no ip route' in strip_cmd:
                 no_ip_route(strip_cmd)
 
+            elif 'ip route' in strip_cmd:
+                ip_route(strip_cmd)
+
             elif 'ip route-cache' in strip_cmd:
                 ip_route_cache(strip_cmd)
 
