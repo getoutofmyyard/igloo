@@ -40,8 +40,7 @@ def ip_route(add_this_route):
     split_arg = add_this_route.split(' ')
 
     if len(split_arg) == 7 \
-       or len(split_arg) == 8 \
-       and 'metric' in split_arg:
+    and 'metric' in split_arg:
 
         dest_prefix = split_arg[2]
         next_hop = split_arg[3]
