@@ -58,15 +58,24 @@ def tcp_connect(tcp_conn_arg):
     if len(command_parse) == 5:
         destination_host = command_parse[2]
         destination_port = command_parse[4]
-        send_syn = pshell_decoder('test-netconnection ' + destination_host + ' -port ' + destination_port)
-        if 'TcpTestSucceeded : True' in send_syn:
-            newline()
-            print('notify~! Success: SYN+ACK received from remote host %s:%s.' %  (destination_host,destination_port))
-            newline()
-        else:
-            newline()
-            print('notify~! Failure: No SYN+ACK received from remote host %s:%s.' % (destination_host,destination_port))
-            newline()
+
+        send_syn = pshell_decoder('test-netconnection -ComputerName ' + destination_host + ' -Port ' + destination_port)
+
+        # Find the line with the TcpTestSucceeded result
+        send_syn_lines = send_syn.splitlines()
+        for line in send_syn_lines:
+            if 'TcpTestSucceeded' in line:
+                # Check if there is true in that line's output
+                if 'True' in line:
+                    newline()
+                    print('notify~! Success: SYN+ACK received from remote host %s:%s.' %  (destination_host,destination_port))
+                    newline()
+                    return
+                else :        
+                    newline()
+                    print('notify~! Failure: No SYN+ACK received from remote host %s:%s.' % (destination_host,destination_port))
+                    newline()
+                    return
     else:
         newline()
         read_file('.\\help-files\\helpTcpConnect.txt')
