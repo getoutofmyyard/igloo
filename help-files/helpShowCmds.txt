@@ -16,4 +16,5 @@ show powershell policy          - show the powershell script execution policy
 show powershell version         - show the powershell version that is currently installed
 show proc                       - show all windows processes
 show proc top                   - show the most costly windows processes
+show programs                   - show all installed programs
 show svc                        - show windows services currently running
