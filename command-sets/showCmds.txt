@@ -22,6 +22,5 @@ show powershell policy
 show powershell version
 show proc
 show proc top
-show programs
 show svc
 show tcp
