@@ -268,12 +268,16 @@ def int_tree(int_command):
             newline()
 
 def cli():
-    # CLI prompts user for input as long as prompt_keepalive == 1
     prompt_keepalive = 1
+
+    # CLI prompts user for input as long as prompt_keepalive == 1
     while prompt_keepalive == 1:
         try:
-            # Terminal prompt that accepts commands from the list below
-            user_cmd = input("igloo~$ ")
+            if len(sys.argv) > 1:
+                user_cmd = ' '.join(sys.argv[1:])
+                prompt_keepalive = 0
+            else:
+                user_cmd = input("igloo~$ ")
 
             # Remove whitespace from user input
             strip_cmd = user_cmd.rstrip()
@@ -442,6 +446,9 @@ def cli():
             continue
 
 #admin_check()
-splash_screen()
+
+if len(sys.argv) <= 1:
+    splash_screen()
+
 cli()
 sys.exit()
