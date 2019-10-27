@@ -329,6 +329,15 @@ def cli():
                     newline()
                     print('error~! File not found.')
                     newline()
+                    
+            elif 'man' in strip_cmd:
+                for line in manual.manual_dictionary:
+                    if line == strip_cmd:
+                        key = manual.manual_dictionary.get(line)
+                        newline()
+                        print('notify~! Opening {} with default browser.'.format(key))
+                        webbrowser.open_new(key)
+                        newline()
 
             # Compare user input against actionable commands. Send to
             # the appropriate command tree (a function) if there is a match.
@@ -433,15 +442,6 @@ def cli():
                         newline()
                     else:
                         pass
-
-            elif 'man' in strip_cmd:
-                for line in manual.manual_dictionary:
-                    if line == strip_cmd:
-                        key = manual.manual_dictionary.get(line)
-                        newline()
-                        print('notify~! Opening {} with default browser.'.format(key))
-                        webbrowser.open_new(key)
-                        newline()
 
             elif strip_cmd == 'notepad':
                 subprocess.call(['notepad.exe'])
