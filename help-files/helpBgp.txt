@@ -1,3 +1,4 @@
+advert            - advertise prefix to bgp peers
 enable            - enable bgp routing
 hold-time         - set hold-timer for bgp sessions
 id                - set bgp router id and local asn

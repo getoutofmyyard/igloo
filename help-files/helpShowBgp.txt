@@ -1,2 +1,3 @@
+advert              - display bgp routes advertised to peers
 id                  - display local bgp configuration
 peer                - display bgp peer configuration

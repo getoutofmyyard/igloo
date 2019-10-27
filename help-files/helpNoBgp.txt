@@ -1,0 +1,3 @@
+advert            - disable a prefix advertisement
+id                - disable the bgp routing instance
+peer              - delete a peer profile

@@ -26,7 +26,19 @@ def bgp_install():
 def bgp_routing(bgp_command):
     split_cmd = bgp_command.split(' ')
 
-    if split_cmd[2] == 'id'\
+    if split_cmd[3] == 'id' \
+    and split_cmd[0] == 'no':
+        remove_router = pshell_decoder('Remove-BgpRouter -Force')
+        if 'Remove-BgpRouter' in remove_router:
+            newline()
+            print('notify~! BGP is not enabled for this machine')
+            newline()
+        else:
+            newline()
+            print('notify~! The local BGP routing instance has been deleted')
+            newline()
+
+    elif split_cmd[2] == 'id'\
     and '.' in split_cmd[3]:
         # router bgp id 10.0.0.33 64512
         router_id = split_cmd[3]
@@ -48,6 +60,67 @@ def bgp_routing(bgp_command):
                     file.write(local_as)
                 print('notify~! BGP routing instance created. RID={} AS={}'.format(router_id, local_as))
                 newline()
+
+
+    elif split_cmd[3] == 'advert' \
+    and split_cmd[0] == 'no' \
+    and '.' in split_cmd[4]:
+        # no router bgp network 172.16.1.0/24
+        prefix = split_cmd[4]
+        remove_prefix = pshell_decoder('Remove-BgpRouteAggregate -Prefix {} -Force'.format(prefix))
+        if ' The parameter is incorrect.' in remove_prefix:
+            newline()
+            print('notify~! Invalid prefix. Use CIDR notation (e.g. \'172.16.1.0/24\') and')
+            print('notify~! keep the entered network address on bit boundaries.')
+            newline()
+        elif ' BGP is not configured.' in remove_prefix:
+            newline()
+            print('notify~! BGP is not enabled for this machine. Use \'router bgp id\'')
+            newline()
+        elif ' Aggregate' in remove_prefix:
+            newline()
+            print('notify~! This prefix is not being advertised')
+            newline()
+        elif 'Remove-BgpRouteAggregate' in remove_prefix:
+            newline()
+            print('notify~! This machine has unmet dependencies for BGP routing. Use \'router bgp enable\'')
+            newline()
+        else:
+            newline()
+            print('notify~! Route for prefix {} is now pruned from routing updates'.format(prefix))
+            newline()      
+
+    elif split_cmd[2] == 'advert' \
+    and '.' in split_cmd[3]:
+        # router bgp advert 172.16.1.0/24
+        prefix = split_cmd[3]
+        if len(split_cmd) == 4:
+            advertise_prefix = pshell_decoder('Add-BgpRouteAggregate -Prefix {} -SummaryOnly Disabled -Force'.format(prefix))
+        elif len(split_cmd) == 5 \
+        and split_cmd[4] == 'summary':
+            advertise_prefix = pshell_decoder('Add-BgpRouteAggregate -Prefix {} -SummaryOnly Enabled -Force'.format(prefix))
+        if ' A More or Less specific prefix' in advertise_prefix:
+            newline()
+            print('notify~! Prefix is already advertised.')
+            newline()
+        elif ' The parameter is incorrect.' in advertise_prefix:
+            newline()
+            print('notify~! Invalid prefix. Use CIDR notation (e.g. \'172.16.1.0/24\') and')
+            print('notify~! keep the entered network address on bit boundaries.')
+            newline()
+        elif ' BGP is not configured' in advertise_prefix:
+            newline()
+            print('notify~! BGP is not enabled for this machine. Use \'router bgp id\'')
+            newline()
+        elif 'Add-BgpRouteAggregate' in advertise_prefix:
+            newline()
+            print('notify~! This machine has unmet dependencies for BGP routing. Use \'router bgp enable\'')
+            newline()
+        else:
+            newline()
+            print('notify~! Route to prefix {} is being advertised to peers'.format(prefix))
+            newline()
+
 
     elif split_cmd[2] == 'hold-time'\
     and len(split_cmd) == 5:
@@ -143,18 +216,6 @@ def bgp_routing(bgp_command):
 
             else:
                 pass
-
-    elif split_cmd[3] == 'id' \
-    and split_cmd[0] == 'no':
-        remove_router = pshell_decoder('Remove-BgpRouter -Force')
-        if 'Remove-BgpRouter' in remove_router:
-            newline()
-            print('notify~! BGP is not enabled for this machine')
-            newline()
-        else:
-            newline()
-            print('notify~! The local BGP routing instance has been deleted')
-            newline()
 
     elif split_cmd[3] == 'peer' \
     and split_cmd[0] == 'no':

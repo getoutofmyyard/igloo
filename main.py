@@ -134,6 +134,11 @@ def show_tree(show_command):
                 or 'Get-BgpRouter' in output:
                     print('notify~! BGP routing is not enabled for this machine')
                     newline()
+                elif 'Get-BgpRouteAggregate' in output:
+                    newline()
+                    print('notify~! This machine has unmet dependencies for BGP routing. Use \'router bgp enable\'')
+                    newline()
+
                 else:
                     print(output)
 
@@ -233,9 +238,9 @@ def int_tree(int_command):
         enable_adapter = pshell_decoder('Enable-NetAdapter -Name {}'.format(int_name))
 
         if 'Enable-NetAdapter : Access is denied.' in enable_adapter:
-        	newline()
-        	print('error~! This action requires admin rights!')
-        	newline()
+            newline()
+            print('error~! This action requires admin rights!')
+            newline()
         elif 'No MSFT_NetAdapter objects found' in enable_adapter:
             newline()
             print('notify~! Interface does not exist. Use \'show int\' and \'int ?\' for help')
@@ -260,9 +265,9 @@ def int_tree(int_command):
 
 
         if 'Disable-NetAdapter : Access is denied.' in disable_adapter:
-        	newline()
-        	print('error~! This action requires admin rights!')
-        	newline()
+            newline()
+            print('error~! This action requires admin rights!')
+            newline()
         elif 'No MSFT_NetAdapter objects found' in disable_adapter:
             newline()
             print('notify~! Interface does not exist. Use \'show int\' and \'int ?\' for help')
@@ -329,7 +334,7 @@ def cli():
                     newline()
                     print('error~! File not found.')
                     newline()
-                    
+
             elif 'man' in strip_cmd:
                 for line in manual.manual_dictionary:
                     if line == strip_cmd:
