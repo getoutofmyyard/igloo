@@ -30,7 +30,6 @@ def bgp_routing(bgp_command):
     and '.' in split_cmd[3]:
         # router bgp id 10.0.0.33 64512
         router_id = split_cmd[3]
-        global local_as
         local_as = split_cmd[4]
         if int(local_as) > 65535\
         or int(local_as) < 1:
@@ -45,8 +44,10 @@ def bgp_routing(bgp_command):
                 print('notify~! This machine has unmet dependencies for BGP routing. Use \'router bgp enable\'')
                 newline()
             else:
-	            print('notify~! BGP routing instance created. RID={} AS={}'.format(router_id, local_as))
-	            newline()
+                with open('.\\miscellaneous\\asn.txt', 'w') as file:
+                    file.write(local_as)
+                print('notify~! BGP routing instance created. RID={} AS={}'.format(router_id, local_as))
+                newline()
 
     elif split_cmd[2] == 'hold-time'\
     and len(split_cmd) == 5:
@@ -195,12 +196,13 @@ def bgp_routing(bgp_command):
                 else:
                     newline()
                     print('notify~! Configuring BGP peer...')
+                    with open('.\\miscellaneous\\asn.txt','r') as file:
+                        read_asn = file.read()
 
-                    pshell_cmd = 'Add-BgpPeer -Name {} -PeerIPAddress {} -PeerASN {} -LocalIPAddress {}'.format(peer_name, peer_address, remote_as, local_address)
-
-                    add_peer = pshell_decoder(pshell_cmd)
-                    print('notify~! BGP peering with {} (AS {}) has been enabled'.format(peer_address, remote_as))
-                    newline()
+                        pshell_cmd = 'Add-BgpPeer -Name {} -PeerIPAddress {} -PeerASN {} -LocalIPAddress {} -LocalASN {}'.format(peer_name, peer_address, remote_as, local_address, read_asn)
+                        add_peer = pshell_decoder(pshell_cmd)
+                        print('notify~! BGP peering with {} (AS {}) has been enabled'.format(peer_address, remote_as))
+                        newline()
 
             elif len(split_cmd) == 5 \
             and '.' in split_cmd[4]:
