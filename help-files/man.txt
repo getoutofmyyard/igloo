@@ -1,2 +1,13 @@
-
-notify~! Manual is coming soon!
+crypto              - open the crypto manual page
+fping               - open the fping manual page
+fwall               - open the fwall manual page
+install             - open the install manual page
+int                 - open the int manual page
+ip                  - open the ip manual page
+powershell          - open the powershell manual page
+show                - open the show manual page
+ssh                 - open the ssh manual page
+tcp                 - open the tcp manual page
+update              - open the update manual page
+web                 - open the web manual page
+win                 - open the win manual page

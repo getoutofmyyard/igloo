@@ -26,4 +26,6 @@ show_command_set = {
 	'show ip route':'Get-NetRoute -AddressFamily ipv4 | Sort-Object -Property DestinationPrefix | Format-Table -Autosize',
 	'show ipv6 route':'Get-NetRoute -AddressFamily ipv6 | Sort-Object -Property DestinationPrefix | Format-Table -Autosize',
 	'show programs':r'Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -AutoSize',
+	'show bgp id':'Get-BgpRouter | Select-Object BgpIdentifier, LocalASN, TransitRouting, RouteReflector | Format-List',
+	'show bgp peer':'Get-BgpPeer -Verbose | Format-List',
 }

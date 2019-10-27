@@ -1,0 +1,3 @@
+bgp           - configure bgp routing
+ospf          - configure ospf routing
+rip           - configure rip routing

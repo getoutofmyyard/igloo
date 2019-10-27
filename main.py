@@ -1,7 +1,7 @@
 import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser
 import asyncio, re
 import conversion, helpDict, showDict, winOsDict, winPopenDict, installDict
-import webDict, uninstallDict
+import webDict, uninstallDict, manual
 from datetime import datetime
 from crypto import *
 from fwall import *
@@ -11,8 +11,9 @@ from sshSet import *
 from updateWindows import *
 from winInstallers import *
 from fping import *
+from bgpRouting import *
 
-yes = ['y', 'Y', 'yes', 'Yes'] 
+yes = ['y', 'Y', 'yes', 'Yes']
 no = ['n', 'N', 'no', 'No']
 quit = ['exit','end','bye','quit','leave','esc']
 
@@ -128,6 +129,10 @@ def show_tree(show_command):
                     format_output = output.split(',')[1]
                     newline()
                     print('notify~! Your translated address is ' + format_output)
+                    newline()
+                elif 'Get-BgpPeer' in output \
+                or 'Get-BgpRouter' in output:
+                    print('notify~! BGP routing is not enabled for this machine')
                     newline()
                 else:
                     print(output)
@@ -267,6 +272,16 @@ def int_tree(int_command):
             print('notify~! Interface {} has been disabled'.format(int_name))
             newline()
 
+def router_tree(router_command):
+    if 'bgp' in router_command:
+        bgp_routing(router_command)
+    elif 'rip' in router_command:
+        rip_routing()
+    elif 'ospf' in router_command:
+        ospf_routing()
+    else:
+        pass
+
 def cli():
     prompt_keepalive = 1
 
@@ -328,6 +343,9 @@ def cli():
 
             elif strip_cmd in crypto_general:
                 crypto_tree(strip_cmd)
+
+            elif 'router' in strip_cmd:
+                router_tree(strip_cmd)
 
             elif 'crypto del' in strip_cmd:
                 # A redundant entry is necessary due to the variable
@@ -415,6 +433,15 @@ def cli():
                         newline()
                     else:
                         pass
+
+            elif 'man' in strip_cmd:
+                for line in manual.manual_dictionary:
+                    if line == strip_cmd:
+                        key = manual.manual_dictionary.get(line)
+                        newline()
+                        print('notify~! Opening {} with default browser.'.format(key))
+                        webbrowser.open_new(key)
+                        newline()
 
             elif strip_cmd == 'notepad':
                 subprocess.call(['notepad.exe'])

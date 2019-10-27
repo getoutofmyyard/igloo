@@ -1,20 +1,21 @@
-show arp			- show the arp table for the local host
-show cidr-table			- show cidr conversion table
-show crypto                     - show all VPN connections
-show dns			- show dns information
-show drives			- show storage volumes
-show fwall in                   - show active inbound firewall rules
-show fwall out                  - show active outbound firewall rules
-show fwall profile		- show firewall profiles and related information
-show log			- show windows logs
-show gpo                        - show group policy objects
-show int                        - show ethernet interfaces
-show ip                         - show ip configuration
-show ipv6			- show ipv6 configuration
-show tcp                        - show active tcp connections
-show powershell policy          - show the powershell script execution policy
-show powershell version         - show the powershell version that is currently installed
-show proc                       - show all windows processes
-show proc top                   - show the most costly windows processes
-show programs                   - show all installed programs
-show svc                        - show windows services currently running
+show arp                    - show the arp table for the local host
+show bgp                    - show bgp routing information
+show cidr-table             - show cidr conversion table
+show crypto                 - show all VPN connections
+show dns                    - show dns information
+show drives                 - show storage volumes
+show fwall in               - show active inbound firewall rules
+show fwall out              - show active outbound firewall rules
+show fwall profile          - show firewall profiles and related information
+show log                    - show windows logs
+show gpo                    - show group policy objects
+show int                    - show ethernet interfaces
+show ip                     - show ip configuration
+show ipv6                   - show ipv6 configuration
+show tcp                    - show active tcp connections
+show powershell policy      - show the powershell script execution policy
+show powershell version     - show the powershell version that is currently installed
+show proc                   - show all windows processes
+show proc top               - show the most costly windows processes
+show programs               - show all installed programs
+show svc                    - show windows services currently running

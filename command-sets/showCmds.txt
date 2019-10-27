@@ -1,5 +1,6 @@
 show arp
-show arp
+show bgp id
+show bgp peer
 show cidr-table
 show crypto
 show dns cache

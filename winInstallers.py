@@ -34,7 +34,7 @@ def install_tree(install_command):
                 elif 'ArgumentNotValid:' in install_feature:
                     print('notify~! Feature is either unknown or has unmet dependencies.')
                     newline()
-                elif 'Install-WindowsFeature' in install_feature:
+                elif 'The target' in install_feature:
                     print('notify~! This command is supported only on Windows Server machines')
                     newline()
                 else:

@@ -1,0 +1,4 @@
+Syntax:  router bgp weight {weight metric} {peer}
+Example: router bgp weight 80 mypeer
+
+Use 'man bgp' for detailed command information.

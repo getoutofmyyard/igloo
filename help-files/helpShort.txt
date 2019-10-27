@@ -17,6 +17,7 @@ notepad             - open notepad
 nslookup            - perform dns lookups
 ping                - ping utility
 powershell          - powershell commands
+router              - routing protocol configuration
 show                - display logs, configurations, and other statistics
 ssh                 - autorun cli commands over a list of devices
 tcp                 - network tools

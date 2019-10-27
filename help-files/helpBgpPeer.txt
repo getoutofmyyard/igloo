@@ -1,0 +1,12 @@
+Create a peer profile:   router bgp peer {peer name} {peer ip} {peer asn} {local ip}
+Modify peer ip/asn   :   router bgp peer {peer name} {peer ip | peer asn}
+Modify local ip used :   router bgp peer {peer name} {local ip} local
+Delete peer profile  :   no router bgp peer {peer name}
+
+Example:                 router bgp peer mypeer 10.0.0.1 64512 10.0.0.2
+Example:                 router bgp peer mypeer 10.0.0.254
+Example:                 router bgp peer mypeer 64512
+Example:                 router bgp peer mypeer 192.168.1.1 local
+Example:                 no router bgp peer mypeer
+
+Use 'man bgp' for detailed command information.

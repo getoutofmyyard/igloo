@@ -1,0 +1,2 @@
+id                  - display local bgp configuration
+peer                - display bgp peer configuration
