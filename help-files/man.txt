@@ -5,6 +5,7 @@ install             - open the install manual page
 int                 - open the int manual page
 ip                  - open the ip manual page
 powershell          - open the powershell manual page
+router              - open the router manual page
 show                - open the show manual page
 ssh                 - open the ssh manual page
 tcp                 - open the tcp manual page

@@ -6,6 +6,7 @@ manual_dictionary = {
     'man int':'https://easyigloo.org/int',
     'man ip':'https://easyigloo.org/pageip',
     'man pshell':'https://easyigloo.org/powershell',
+    'man router':'https://easyigloo.org/router',
     'man show':'https://easyigloo.org/show',
     'man ssh':'https://easyigloo.org/ssh',
     'man tcp':'https://easyigloo.org/tcp',
