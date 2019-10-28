@@ -75,39 +75,10 @@ def admin_check():
     # If not, prompt user to elevate privileges.
     is_an_admin = ctypes.windll.shell32.IsUserAnAdmin()
     if is_an_admin == 0:
-        splash_screen()
-        newline()
-        print('notify~! You must run Igloo as Administrator!')
-        try:
-            input_loop = 0
-            newline()
-            while input_loop == 0:
-                elevate_me = input('input~! Restart with elevated privileges?'\
-                +' (y/n) ')
-                if elevate_me in yes:
-                    subprocess.call(['powershell.exe','Start-Process .\\igloo.exe \
-                           -Verb runAs Administrator'])
-                    input_loop = 1
-                    exit()
-
-                elif elevate_me in no:
-                    input_loop = 1
-                    newline()
-                    print('notify~! Exiting Igloo...')
-                    newline()
-                    time.sleep(1)
-                    exit()
-                else:
-                    pass
-        except:
-            newline()
-            newline()
-            print('notify~! Exiting Igloo...')
-            newline()
-            time.sleep(1)
-            exit()
-    else:
-        pass
+        with open('.\\miscellaneous\\no_admin.txt','r') as file:
+            print(file.read())
+            cli()
+            sys.exit()
 
 def who_am_i():
     # Returns current username
@@ -285,7 +256,7 @@ def router_tree(router_command):
     elif 'ospf' in router_command:
         ospf_routing()
     else:
-        pass
+        return
 
 def cli():
     prompt_keepalive = 1
@@ -477,7 +448,7 @@ def cli():
         except:
             continue
 
-#admin_check()
+admin_check()
 
 if len(sys.argv) <= 1:
     splash_screen()
