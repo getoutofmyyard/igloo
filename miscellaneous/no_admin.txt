@@ -1,22 +1,9 @@
 
-88             88                          
-               88                          
-88  ,adPPYb,d8 88  ,adPPYba,   ,adPPYba,   
-88 a8"    `Y88 88 a8"     "8a a8"     "8a  
-88 8b       88 88 8b       d8 8b       d8  
-88 "8a,   ,d88 88 "8a,   ,a8" "8a,   ,a8"  
-88  `"YbbdP"Y8 88  `"YbbdP"'   `"YbbdP"'   
-aa,        ,88                             
-     "Y8bbdP"
-    
-                                                                  
-Version 4.1 
-
 
 notify~! You are not running igloo with elevated privileges. Many commands will not work!
 notify~! Please close igloo and restart as admin for full functionality.
 
 
-Enter "?" for a list of commands.
+
 
 
