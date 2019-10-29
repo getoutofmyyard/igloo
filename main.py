@@ -46,7 +46,7 @@ def parse_file(filepath):
 def splash_screen():
     # Displays the Igloo splash screen
     newline()
-    read_file(".\\miscellaneous\\splash.txt")
+    read_file('.\\miscellaneous\\splash.txt')
 
 # Command lists. Checked against user input for initial piping into
 # the various command trees below.
@@ -448,8 +448,39 @@ def cli():
         except:
             continue
 
-admin_check()
+def check_pshell_profile():
+    # 
+    try:
 
+        exec_policy = pshell_decoder('Get-ExecutionPolicy')
+
+        with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'r') as file:
+            read_file = file.read()
+            split_file = read_file.split('\n')
+            ticker = 1
+            for line in split_file:
+                ticker = ticker + 1
+                if line == 'Set-Alias -Name igloo -Value \'.\\igloo.exe\'':
+                    ps_file = 0
+                    break
+                else:
+                    ps_file = 1
+                    if len(split_file) == ticker - 1 \
+                    and ps_file == 1:
+                        with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'a') as file:
+                            file.write('\nSet-Alias -Name igloo -Value \'.\\igloo.exe\'')
+                    else:
+                        pass
+
+    except FileNotFoundError:
+        if 'Restricted' in exec_policy:
+            pass
+        else:
+            with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'w+') as file:
+                file.write('Set-Alias -Name igloo -Value \'.\\igloo.exe\'')
+
+admin_check()
+check_pshell_profile()
 if len(sys.argv) <= 1:
     splash_screen()
 

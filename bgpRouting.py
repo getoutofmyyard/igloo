@@ -151,7 +151,6 @@ def bgp_routing(bgp_command):
             newline()
             print('notify~! Route to prefix {} is being advertised to peers'.format(prefix))
             newline()
-            
     elif split_cmd[3] == 'id' \
     and split_cmd[0] == 'no':
         remove_router = pshell_decoder('Remove-BgpRouter -Force')
@@ -174,18 +173,38 @@ def bgp_routing(bgp_command):
             print('notify~! Invalid autonomous system number')
             newline()
         else:
-            pshell_cmd = 'Add-BgpRouter -BgpIdentifier {} -LocalASN {}'.format(router_id, local_as)
-            newline()
-            print('notify~! Creating BGP routing instance')
-            init_bgp = pshell_decoder(pshell_cmd)
-            if 'Add-BgpRouter' in init_bgp:
-                print('notify~! This machine has unmet dependencies for BGP routing. Use \'router bgp enable\'')
+            check_for_bgp = pshell_decoder('Get-BgpRouter | Out-Null')
+
+            if 'Get-BgpRouter ' in check_for_bgp:
+
                 newline()
+                print('notify~! Creating BGP routing instance')
+                pshell_cmd = 'Add-BgpRouter -BgpIdentifier {} -LocalASN {}'.format(router_id, local_as)
+                init_bgp = pshell_decoder(pshell_cmd)
+                if ' LAN Routing not configured.' in init_bgp:
+                    print('error~! Missing dependencies. Use \'router bgp enable\'')
+                    newline()
+                    return
+                else:
+                    with open('.\\miscellaneous\\asn.txt', 'w') as file:
+                        file.write(local_as)
+
+                    print('notify~! BGP routing identity created. RID={} AS={}'.format(router_id, local_as))
+                    newline()
+
             else:
+                newline()
+                print('notify~! Modifying BGP routing instance')
+
+                pshell_cmd = 'Set-BgpRouter -BgpIdentifier {} -LocalASN {}'.format(router_id, local_as)
+                init_bgp = pshell_decoder(pshell_cmd)
+
                 with open('.\\miscellaneous\\asn.txt', 'w') as file:
                     file.write(local_as)
-                print('notify~! BGP routing instance created. RID={} AS={}'.format(router_id, local_as))
+
+                print('notify~! BGP routing identity has been modifed. RID={} AS={}'.format(router_id, local_as))
                 newline()
+
 
 
     elif split_cmd[3] == 'advert' \
@@ -249,20 +268,26 @@ def bgp_routing(bgp_command):
                 remote_as = split_cmd[5]
                 local_address = split_cmd[6]
 
-                if int(remote_as) > 65535:
+                if int(remote_as) > 65535 \
+                or int(remote_as) < 1:
                     newline()
                     print('notify~! Invalid autonomous system number')
                     newline()
                 else:
-                    newline()
-                    print('notify~! Configuring BGP peer...')
-                    with open('.\\miscellaneous\\asn.txt','r') as file:
-                        read_asn = file.read()
-
-                        pshell_cmd = 'Add-BgpPeer -Name {} -PeerIPAddress {} -PeerASN {} -LocalIPAddress {} -LocalASN {}'.format(peer_name, peer_address, remote_as, local_address, read_asn)
-                        add_peer = pshell_decoder(pshell_cmd)
-                        print('notify~! BGP peering with {} (AS {}) has been enabled'.format(peer_address, remote_as))
+                    try:
+                        with open('.\\miscellaneous\\asn.txt','r') as file:
+                            read_asn = file.read()
+                            newline()
+                            print('notify~! Configuring BGP peer...')
+                            pshell_cmd = 'Add-BgpPeer -Name {} -PeerIPAddress {} -PeerASN {} -LocalIPAddress {} -LocalASN {}'.format(peer_name, peer_address, remote_as, local_address, read_asn)
+                            add_peer = pshell_decoder(pshell_cmd)
+                            print('notify~! BGP peering with {} (AS {}) has been enabled'.format(peer_address, remote_as))
+                            newline()
+                    except:
                         newline()
+                        print('error~! Local ASN has not been configured. Use \'router bgp id\'')
+                        newline()
+
 
             elif len(split_cmd) == 5 \
             and '.' in split_cmd[4]:
@@ -307,3 +332,8 @@ def bgp_routing(bgp_command):
                     newline()
                     print('notify~! Local IP set to {} for peer {}'.format(local_ip, peer_name))
                     newline()
+
+            else:
+                newline()
+                print('error~! Invalid command.')
+                newline()
