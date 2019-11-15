@@ -1,5 +1,5 @@
 arista          - Arista EOS devices
-asa             - Cisco ASA
+asa             - Cisco ASA (coming soon)
 hp-curve        - HP Procurve
 ios             - Cisco IOS/IOS-XE
 ios-xr          - Cisco IOS-XR

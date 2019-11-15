@@ -1,5 +1,6 @@
 import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser
 import asyncio, re
+sys.path.insert(1, '.\\scripts')
 import conversion, helpDict, showDict, winOsDict, winPopenDict, installDict
 import webDict, uninstallDict, manual
 from datetime import datetime
@@ -12,41 +13,13 @@ from updateWindows import *
 from winInstallers import *
 from fping import *
 from bgpRouting import *
-
-yes = ['y', 'Y', 'yes', 'Yes']
-no = ['n', 'N', 'no', 'No']
-quit = ['exit','end','bye','quit','leave','esc']
-
-
-#Common cmd.exe commands. Checked against user input
-#and invokes cmd.exe when these terms are discovered
-cmd_exe_options = ['tftp','ftp','telnet','netsh','nslookup',\
-                   'ping','tracert']
-
-def newline():
-    print('')
-
-def read_file(filepath):
-    # Reads a file. Used most often for help files.
-    try:
-        with open(filepath,'r') as file:
-            print(file.read())
-            newline()
-    except:
-        newline()
-        print('error~! Help file ' + filepath + ' is missing.')
-        newline()
+from deploy import *
 
 def parse_file(filepath):
     # Reads file, splits into an array, and returns the array
     with open(filepath) as file:
         split_file = file.read().split('\n')
         return split_file
-
-def splash_screen():
-    # Displays the Igloo splash screen
-    newline()
-    read_file('.\\miscellaneous\\splash.txt')
 
 # Command lists. Checked against user input for initial piping into
 # the various command trees below.
@@ -62,6 +35,34 @@ show_cmds = parse_file('.\\command-sets\\showCmds.txt')
 win_os_cmds = parse_file('.\\command-sets\\winOsCmds.txt')
 win_popen_cmds = parse_file('.\\command-sets\\winPopenCmds.txt')
 ssh_cmds = parse_file('.\\command-sets\\sshCmds.txt')
+
+yes = ['y', 'Y', 'yes', 'Yes']
+no = ['n', 'N', 'no', 'No']
+
+quit = ['exit','end','bye','quit','leave','esc']
+
+#invoke cmd.exe when these terms are discovered
+cmd_exe_options = ['tftp','ftp','telnet','netsh','nslookup',\
+                   'ping','tracert','ipconfig']
+
+def newline():
+    print('')
+
+def read_file(filepath):
+    # Reads a file. Used most often for help files.
+    try:
+        with open(filepath,'r') as file:
+            print(file.read())
+            newline()
+    except:
+        newline()
+        print('error~! Help file ' + filepath + ' is missing.')
+        newline()
+
+def splash_screen():
+    # Displays the Igloo splash screen
+    newline()
+    read_file('.\\miscellaneous\\splash.txt')
 
 def pshell_decoder(command_to_decode):
     # Runs pshell command and decodes the output
@@ -85,6 +86,48 @@ def who_am_i():
     get_username = pshell_decoder('whoami')
     format_username = get_username.split("\\",1)[1].strip()
     return format_username
+
+def check_pshell_profile():
+    # creates alias for igloo upon launch.
+    # skip this process if execution policy is resrictive.
+
+    try:
+
+        exec_policy = pshell_decoder('Get-ExecutionPolicy')
+
+        with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'r') as file:
+
+            # format the file
+            read_file = file.read()
+            split_file = read_file.split('\n')
+
+            # use a ticker to track progress of the for loop 
+            # across the lines of the powershell profile
+            ticker = 1
+
+            for line in split_file:
+
+                # search the profile for the igloo alias. if it exists,
+                # exit the loop and do nothing. else, append to the profile.
+                ticker = ticker + 1
+                if line == 'Set-Alias -Name igloo -Value \'.\\igloo.exe\'':
+                    ps_file = 0
+                    break
+                else:
+                    ps_file = 1
+                    if len(split_file) == ticker - 1 \
+                    and ps_file == 1:
+                        with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'a') as file:
+                            file.write('\nSet-Alias -Name igloo -Value \'.\\igloo.exe\'')
+                    else:
+                        pass
+
+    except FileNotFoundError:
+        if 'Restricted' in exec_policy:
+            pass
+        else:
+            with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'w+') as file:
+                file.write('Set-Alias -Name igloo -Value \'.\\igloo.exe\'')
 
 def show_tree(show_command):
     # Search showDict.py for relevant command
@@ -259,6 +302,7 @@ def router_tree(router_command):
         return
 
 def cli():
+
     prompt_keepalive = 1
 
     # CLI prompts user for input as long as prompt_keepalive == 1
@@ -269,6 +313,7 @@ def cli():
                 prompt_keepalive = 0
             else:
                 user_cmd = input("igloo~$ ")
+
 
             # Remove whitespace from user input
             strip_cmd = user_cmd.rstrip()
@@ -315,8 +360,13 @@ def cli():
                         webbrowser.open_new(key)
                         newline()
 
+
             # Compare user input against actionable commands. Send to
             # the appropriate command tree (a function) if there is a match.
+
+            elif strip_cmd == 'deploy ad-ds':
+                active_directory_deployment(strip_cmd)
+
             elif strip_cmd in show_cmds:
                 show_tree(strip_cmd)
 
@@ -447,37 +497,6 @@ def cli():
 
         except:
             continue
-
-def check_pshell_profile():
-    # 
-    try:
-
-        exec_policy = pshell_decoder('Get-ExecutionPolicy')
-
-        with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'r') as file:
-            read_file = file.read()
-            split_file = read_file.split('\n')
-            ticker = 1
-            for line in split_file:
-                ticker = ticker + 1
-                if line == 'Set-Alias -Name igloo -Value \'.\\igloo.exe\'':
-                    ps_file = 0
-                    break
-                else:
-                    ps_file = 1
-                    if len(split_file) == ticker - 1 \
-                    and ps_file == 1:
-                        with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'a') as file:
-                            file.write('\nSet-Alias -Name igloo -Value \'.\\igloo.exe\'')
-                    else:
-                        pass
-
-    except FileNotFoundError:
-        if 'Restricted' in exec_policy:
-            pass
-        else:
-            with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'w+') as file:
-                file.write('Set-Alias -Name igloo -Value \'.\\igloo.exe\'')
 
 admin_check()
 check_pshell_profile()

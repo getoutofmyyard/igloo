@@ -1,0 +1,2 @@
+ad-ds           - Create an Active Directory forest and promote this server to domain controller
+

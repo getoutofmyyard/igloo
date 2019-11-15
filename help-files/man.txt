@@ -1,4 +1,5 @@
 crypto              - open the crypto manual page
+deploy				- open the deploy manual page
 fping               - open the fping manual page
 fwall               - open the fwall manual page
 install             - open the install manual page

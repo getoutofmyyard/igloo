@@ -4,6 +4,7 @@ about               - information about igloo
 calc                - calculator
 cls                 - clear the igloo console
 crypto              - vpn config and cert generation
+deploy              - server deployment scripts
 fping               - ping a list of devices
 ftp                 - ftp client
 fwall               - firewall configuration
