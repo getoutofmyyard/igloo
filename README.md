@@ -1,4 +1,4 @@
-# What's Igloo?
+# What's igloo?
 
 Igloo is a terminal application which combines Python and PowerShell to simplify network and Windows administration tasks. 
 
