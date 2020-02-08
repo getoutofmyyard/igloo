@@ -1,14 +1,6 @@
 import subprocess, asyncio
 import installDict, uninstallDict
-
-def newline():
-    print('')
-
-def pshell_decoder(command_to_decode):
-    # Runs pshell command and decodes the output
-    get_output = subprocess.Popen(['powershell.exe', command_to_decode], stdout=subprocess.PIPE)
-    decoded_output = get_output.communicate()[0].decode('iso-8859-1')
-    return decoded_output
+from common import *
 
 def install_tree(install_command):
     # Search installlDict.py for relevant command.

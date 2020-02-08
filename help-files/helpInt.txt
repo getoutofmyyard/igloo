@@ -1,5 +1,6 @@
-Syntax:  int {interface index #} {on/off}
-Example: int 9 on
+Syntax:  int {action} {interface index #}
+Example: int enable 14
 
-on                  - Enable a network interface
-off                 - Disable a network interface
+enable                  - Enable  a network interface
+disable                 - Disable a network interface
+reset                   - Restart a network interface (use * for all interfaces)

@@ -1,4 +1,4 @@
-des				- encrypt using des  (weak)
-3des				- encrypt using 3des (weak)
-aes128				- encrypt using aes128
-aes256				- encrypt using aes256
+des                 - encrypt using des  (weak)
+3des                - encrypt using 3des (weak)
+aes128              - encrypt using aes128
+aes256              - encrypt using aes256

@@ -32,7 +32,7 @@ Else {
 		$Downloader.Updates = $UpdateCollection
 		$Track = $Downloader.Download()
 		If (($Track.HResult -EQ 0) -AND ($Track.ResultCode -EQ 2)) {
-			Write-Host" Download succeeded!"
+			Write-Host "Download succeeded!"
 		}
 		Else {
 			Add-Content $ReportFile "error~! Download failed with error $Error()"

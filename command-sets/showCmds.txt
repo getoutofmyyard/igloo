@@ -27,3 +27,4 @@ show proc top
 show programs
 show svc
 show tcp
+show fwall profile

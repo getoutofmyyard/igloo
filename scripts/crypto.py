@@ -1,14 +1,6 @@
 import sys, string, os, subprocess, random, ctypes, hashlib
 import socket, datetime, re
-
-def newline():
-    print('')
-
-def pshell_decoder(command_to_decode):
-    # Runs pshell command and decodes the output
-    get_output = subprocess.Popen(['powershell.exe', command_to_decode], stdout=subprocess.PIPE)
-    decoded_output = get_output.communicate()[0].decode('iso-8859-1')
-    return decoded_output
+from common import *
 
 def crypto_ipsec_build(vpn_auth, vpn_encrypt, vpn_group):
     # Receives var from cryptoConfig(cryptoArg), gathers info, and then executes a powershell command which creates an ipsec vpn

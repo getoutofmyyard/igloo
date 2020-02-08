@@ -10,11 +10,10 @@ aa,        ,88
      "Y8bbdP"
     
                                                                   
-Version 4.1 
+Version 4.3
 
 
 notify~! You are not running igloo with elevated privileges. Many commands will not work!
-notify~! Please close igloo and restart as admin for full functionality.
 
 
 Enter "?" for a list of commands.

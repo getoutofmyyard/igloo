@@ -1,4 +1,4 @@
-Syntax:  router bgp hold-time {seconds} {peer}
-Example: router bgp hold-time 30 mypeer
+Syntax:  bgp hold-time {seconds} {peer}
+Example: bgp hold-time 30 mypeer
 
 Use 'man bgp' for detailed command information.

@@ -1,13 +1,5 @@
 import subprocess, os 
-
-def newline():
-    print('')
-
-def pshell_decoder(command_to_decode):
-    # Runs pshell command and decodes the output
-    get_output = subprocess.Popen(['powershell.exe', command_to_decode], stdout=subprocess.PIPE)
-    decoded_output = get_output.communicate()[0].decode('iso-8859-1')
-    return decoded_output
+from common import *
 
 def fwall_rule_config(rule_arg):
     # Assigns firewall variables and pipes them into fwall_rule_build

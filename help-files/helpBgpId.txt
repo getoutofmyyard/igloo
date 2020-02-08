@@ -1,6 +1,6 @@
-Create a BGP routing instance   :  router bgp id {router-id} {local asn}
-Delete the BGP routing instance :  no router bgp id
-Example                         :  router bgp id 10.0.0.50 64512
+Create a BGP routing instance   :  bgp id {router-id} {local asn}
+Delete the BGP routing instance :  no bgp id
+Example                         :  bgp id 10.0.0.50 64512
 
 Use this command for initial BGP configuration (before peer definitions).
 Use 'man bgp' for detailed command information.

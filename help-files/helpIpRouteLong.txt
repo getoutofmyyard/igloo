@@ -1,7 +1,4 @@
 Syntax:  [no] ip route {destination} {next-hop address} {index # of outgoing interface} [metric {integer route metric}]
 Example: ip route 172.16.1.0/24 10.0.0.1 9 metric 15 
 
-* Destination subnet masks should be expressed in CIDR notation. Use 'show cidr-table' for help.
-* Use 'show ip address' or 'show int' to find the index number of a network interface.
-* The 'metric' parameter is optional.
-* Use 'help ip route' for a detailed explanation of this command and its usage. 
+* Use 'man ip' for a detailed explanation of this command and its usage. 

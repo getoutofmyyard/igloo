@@ -1,6 +1,6 @@
-Advertise summary route  : router bgp advert 10.0.0.0/16 summary
-Include longer prefixes  : router bgp advert 192.168.1.0/24
-Stop advertising prefix  : no router bgp advert 10.0.0.0/16
+Advertise summary route  : bgp advert 10.0.0.0/16 summary
+Include longer prefixes  : bgp advert 192.168.1.0/24
+Stop advertising prefix  : no bgp advert 10.0.0.0/16
 
 The 'summary' option is not required when disabling advertisements.
 Use 'man router' for detailed command information.

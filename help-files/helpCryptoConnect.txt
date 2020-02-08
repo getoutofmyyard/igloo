@@ -1,5 +1,4 @@
 Syntax:  crypto connect {vpn name}
-
 Example: crypto connect myvpn 
 
 Use 'show crypto' for a list of vpn adapters.

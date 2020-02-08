@@ -1,20 +1,8 @@
 import installDict, subprocess
+from common import *
 
-# Routing operations supported on Windows Server
 
-def newline():
-    print('')
-
-def pshell_decoder(command_to_decode):
-    # Runs pshell command and decodes the output
-    get_output = subprocess.Popen(['powershell.exe', command_to_decode],\
-    stdout=subprocess.PIPE)
-    decoded_output = get_output.communicate()[0].decode('iso-8859-1')
-    return decoded_output
-
-yes = ['y', 'Y', 'yes', 'Yes']
-no = ['n', 'N', 'no', 'No']
-
+# Install RRAS with BGP features only
 def bgp_install():
     print('notify~! Enabling BGP routing')
     subprocess.call(['powershell.exe','Install-RemoteAccess -VpnType RoutingOnly | Out-Null'])
@@ -24,27 +12,28 @@ def bgp_install():
     newline()
     return
 
+# BGP options
 def bgp_routing(bgp_command):
     split_cmd = bgp_command.split(' ')
 
-    if split_cmd[2] == 'hold-time'\
-    and len(split_cmd) == 5:
-        peer_name = split_cmd[4]
-        hold_time = split_cmd[3]
+    if split_cmd[1] == 'hold-time'\
+    and len(split_cmd) == 4:
+        peer_name = split_cmd[3]
+        hold_time = split_cmd[2]
         set_holdtime = pshell_decoder('Set-BgpPeer -Name {} -HoldTimeSec {}'.format(peer_name, hold_time))
         if 'Set-BgpPeer' in set_holdtime:
             newline()
-            print('notify~! Peer does not exist. Use \'router bgp peer\'')
+            print('notify~! Peer does not exist. Use \'bgp peer\'')
             newline()
         else:
             newline()
             print('notify~! BGP hold timer for peer {} set to {}s'.format(peer_name, hold_time))
             newline()
 
-    elif split_cmd[2] == 'weight'\
-    and len(split_cmd) == 5:
-        peer_name = split_cmd[4]
-        weight = split_cmd[3]
+    elif split_cmd[1] == 'weight'\
+    and len(split_cmd) == 4:
+        peer_name = split_cmd[3]
+        weight = split_cmd[2]
         input_loop = 1
         newline()
 
@@ -58,7 +47,7 @@ def bgp_routing(bgp_command):
                 set_metric = pshell_decoder(pshell_cmd)
                 if 'Set-BgpPeer' in set_metric:
                     newline()
-                    print('notify~! Peer does not exist. Use \'router bgp peer\'')
+                    print('notify~! Peer does not exist. Use \'bgp peer\'')
                     newline()
                 else:
                     newline()
@@ -72,7 +61,8 @@ def bgp_routing(bgp_command):
             else:
                 pass
 
-    elif split_cmd[2] == 'enable':
+    # BGP initialization script
+    elif split_cmd[1] == 'enable':
         newline()
         input_loop = 1
         while input_loop == 1:
@@ -121,14 +111,14 @@ def bgp_routing(bgp_command):
             else:
                 pass
 
-    elif split_cmd[2] == 'advert' \
-    and '.' in split_cmd[3]:
-        # router bgp advert 172.16.1.0/24
-        prefix = split_cmd[3]
-        if len(split_cmd) == 4:
+    elif split_cmd[1] == 'advert' \
+    and '.' in split_cmd[2]:
+        # bgp advert 172.16.1.0/24
+        prefix = split_cmd[2]
+        if len(split_cmd) == 3:
             advertise_prefix = pshell_decoder('Add-BgpRouteAggregate -Prefix {} -SummaryOnly Disabled -Force'.format(prefix))
-        elif len(split_cmd) == 5 \
-        and split_cmd[4] == 'summary':
+        elif len(split_cmd) == 4 \
+        and split_cmd[3] == 'summary':
             advertise_prefix = pshell_decoder('Add-BgpRouteAggregate -Prefix {} -SummaryOnly Enabled -Force'.format(prefix))
         if ' A More or Less specific prefix' in advertise_prefix:
             newline()
@@ -141,17 +131,17 @@ def bgp_routing(bgp_command):
             newline()
         elif ' BGP is not configured' in advertise_prefix:
             newline()
-            print('notify~! BGP is not enabled for this machine. Use \'router bgp id\'')
+            print('notify~! BGP is not enabled for this machine. Use \'bgp id\'')
             newline()
         elif 'Add-BgpRouteAggregate' in advertise_prefix:
             newline()
-            print('notify~! This machine has unmet dependencies for BGP routing. Use \'router bgp enable\'')
+            print('notify~! This machine has unmet dependencies for BGP routing. Use \'bgp enable\'')
             newline()
         else:
             newline()
             print('notify~! Route to prefix {} is being advertised to peers'.format(prefix))
             newline()
-    elif split_cmd[3] == 'id' \
+    elif split_cmd[2] == 'id' \
     and split_cmd[0] == 'no':
         remove_router = pshell_decoder('Remove-BgpRouter -Force')
         if 'Remove-BgpRouter' in remove_router:
@@ -163,11 +153,12 @@ def bgp_routing(bgp_command):
             print('notify~! The local BGP routing instance has been deleted')
             newline()
 
-    elif split_cmd[2] == 'id'\
-    and '.' in split_cmd[3]:
-        # router bgp id 10.0.0.33 64512
-        router_id = split_cmd[3]
-        local_as = split_cmd[4]
+    # Configure local BGP identity
+    elif split_cmd[1] == 'id'\
+    and '.' in split_cmd[2]:
+        # bgp id 10.0.0.33 64512
+        router_id = split_cmd[2]
+        local_as = split_cmd[3]
         if int(local_as) > 65535\
         or int(local_as) < 1:
             print('notify~! Invalid autonomous system number')
@@ -182,7 +173,7 @@ def bgp_routing(bgp_command):
                 pshell_cmd = 'Add-BgpRouter -BgpIdentifier {} -LocalASN {}'.format(router_id, local_as)
                 init_bgp = pshell_decoder(pshell_cmd)
                 if ' LAN Routing not configured.' in init_bgp:
-                    print('error~! Missing dependencies. Use \'router bgp enable\'')
+                    print('error~! Missing dependencies. Use \'bgp enable\'')
                     newline()
                     return
                 else:
@@ -207,11 +198,11 @@ def bgp_routing(bgp_command):
 
 
 
-    elif split_cmd[3] == 'advert' \
+    elif split_cmd[2] == 'advert' \
     and split_cmd[0] == 'no' \
-    and '.' in split_cmd[4]:
-        # no router bgp network 172.16.1.0/24
-        prefix = split_cmd[4]
+    and '.' in split_cmd[3]:
+        # no bgp network 172.16.1.0/24
+        prefix = split_cmd[3]
         remove_prefix = pshell_decoder('Remove-BgpRouteAggregate -Prefix {} -Force'.format(prefix))
         if ' The parameter is incorrect.' in remove_prefix:
             newline()
@@ -220,7 +211,7 @@ def bgp_routing(bgp_command):
             newline()
         elif ' BGP is not configured.' in remove_prefix:
             newline()
-            print('notify~! BGP is not enabled for this machine. Use \'router bgp id\'')
+            print('notify~! BGP is not enabled for this machine. Use \'bgp id\'')
             newline()
         elif ' Aggregate' in remove_prefix:
             newline()
@@ -228,14 +219,14 @@ def bgp_routing(bgp_command):
             newline()
         elif 'Remove-BgpRouteAggregate' in remove_prefix:
             newline()
-            print('notify~! This machine has unmet dependencies for BGP routing. Use \'router bgp enable\'')
+            print('notify~! This machine has unmet dependencies for BGP routing. Use \'bgp enable\'')
             newline()
         else:
             newline()
             print('notify~! Route for prefix {} is now pruned from routing updates'.format(prefix))
             newline()      
 
-    elif split_cmd[3] == 'peer' \
+    elif split_cmd[2] == 'peer' \
     and split_cmd[0] == 'no':
         peer_name = split_cmd[4]
         rm_peer = pshell_decoder('Remove-BgpPeer -Name {} -Force'.format(peer_name))
@@ -248,25 +239,25 @@ def bgp_routing(bgp_command):
             print('notify~! Peer profile {} was deleted'.format(peer_name))
             newline()
 
-    elif split_cmd[2] == 'peer' \
-    and len(split_cmd) <= 7:
+    elif split_cmd[1] == 'peer' \
+    and len(split_cmd) <= 6:
 
         check_for_id = pshell_decoder('Get-BgpRouter | Out-Null')
 
         if 'Get-BgpRouter' in check_for_id:
             newline()
-            print('notify~! You must create a BGP identity first. Use \'router bgp id\'')
+            print('notify~! You must create a BGP identity first. Use \'bgp id\'')
             newline()
             pass
-        # router bgp peer OK-Site 10.0.0.1 64512 192.168.1.1
-        # router bgp peer mypeer 10.0.0.254
+        # bgp peer OK-Site 10.0.0.1 64512 192.168.1.1
+        # bgp peer mypeer 10.0.0.254
         else:
-            if len(split_cmd) == 7 \
-            and '.' in split_cmd[4]:
-                peer_name = split_cmd[3]
-                peer_address = split_cmd[4]
-                remote_as = split_cmd[5]
-                local_address = split_cmd[6]
+            if len(split_cmd) == 6 \
+            and '.' in split_cmd[3]:
+                peer_name = split_cmd[2]
+                peer_address = split_cmd[3]
+                remote_as = split_cmd[4]
+                local_address = split_cmd[5]
 
                 if int(remote_as) > 65535 \
                 or int(remote_as) < 1:
@@ -285,48 +276,48 @@ def bgp_routing(bgp_command):
                             newline()
                     except:
                         newline()
-                        print('error~! Local ASN has not been configured. Use \'router bgp id\'')
+                        print('error~! Local ASN has not been configured. Use \'bgp id\'')
                         newline()
 
 
-            elif len(split_cmd) == 5 \
-            and '.' in split_cmd[4]:
-                peer_name = split_cmd[3]
-                peer_address = split_cmd[4]
+            elif len(split_cmd) == 4 \
+            and '.' in split_cmd[3]:
+                peer_name = split_cmd[2]
+                peer_address = split_cmd[3]
                 set_peer_ip = pshell_decoder('Set-BgpPeer -Name {} -PeerIPAddress {} -Force'.format(peer_name, peer_address))
                 if 'Set-BgpPeer' in set_peer_ip:
                     newline()
-                    print('notify~! Peer does not exist. Use \'router bgp peer\'')
+                    print('notify~! Peer does not exist. Use \'bgp peer\'')
                     newline()
                 else:
                     newline()
                     print('notify~! Address for peer {} set to {}'.format(peer_name, peer_address))
                     newline()
 
-            elif len(split_cmd) == 5 \
-            and '.' not in split_cmd[4]:
-                peer_name = split_cmd[3]
-                remote_as = split_cmd[4]
+            elif len(split_cmd) == 4 \
+            and '.' not in split_cmd[3]:
+                peer_name = split_cmd[2]
+                remote_as = split_cmd[3]
                 set_peer_as = pshell_decoder('Set-BgpPeer -Name {} -PeerASN {} -Force'.format(peer_name, remote_as))
                 if 'Set-BgpPeer' in set_peer_ip:
                     newline()
-                    print('notify~! Peer does not exist. Use \'router bgp peer\'')
+                    print('notify~! Peer does not exist. Use \'bgp peer\'')
                     newline()
                 else:
                     newline()
                     print('notify~! ASN for peer {} set to {}'.format(peer_name, remote_as))
                     newline()
 
-            elif len(split_cmd) == 6 \
-            and '.' in split_cmd[4] \
-            and split_cmd[5] == 'local':
-                # router bgp peer mypeer 10.0.0.1 local
-                peer_name = split_cmd[3]
-                local_ip = split_cmd[4]
+            elif len(split_cmd) == 5 \
+            and '.' in split_cmd[3] \
+            and split_cmd[4] == 'local':
+                # bgp peer mypeer 10.0.0.1 local
+                peer_name = split_cmd[2]
+                local_ip = split_cmd[3]
                 set_local_ip = pshell_decoder('Set-BgpPeer -Name {} -LocalIPAddress {} -Force'.format(peer_name, local_ip))
                 if 'Set-BgpPeer' in set_local_ip:
                     newline()
-                    print('notify~! Peer does not exist. Use \'router bgp peer\'')
+                    print('notify~! Peer does not exist. Use \'bgp peer\'')
                     newline()
                 else:
                     newline()

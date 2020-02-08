@@ -1,21 +1,12 @@
 import subprocess, asyncio, installDict, uninstallDict
 from getpass import getpass
+from common import *
 
 letters_lower = 'abcdefghijklmnopqrstuvwxyz'
 letters_upper = letters_lower.upper()
 symbols = '!@#$%^&*()_+=-`~'
 numbers = '1234567890'
 
-
-def newline():
-    print('')
-
-def pshell_decoder(command_to_decode):
-    # Runs pshell command and decodes the output
-    get_output = subprocess.Popen(['powershell.exe', command_to_decode],\
-    stdout=subprocess.PIPE)
-    decoded_output = get_output.communicate()[0].decode('iso-8859-1')
-    return decoded_output
 
 def active_directory_deployment(command):
 
@@ -58,7 +49,7 @@ def active_directory_deployment(command):
                     else:
                         pass
 
-                newline()
+
                 print('notify~! Checking static IP addresses for entry')
 
                 check_ip = pshell_decoder('Get-NetIPAddress -AddressFamily IPv4 | Select-Object -Property IPAddress | Format-Table -HideTableHeaders')
@@ -170,7 +161,6 @@ def active_directory_deployment(command):
         newline()
         return
 
-    newline()
     print('notify~! Checking for existing AD-DS installation')
 
     check_adds_install = pshell_decoder('Get-WindowsFeature -Name AD-Domain-Services | Format-Table -HideTableHeaders')

@@ -12,21 +12,12 @@ aa,        ,88
 
 Igloo makes life easy.
 
-Version 4
+Version 4.3
 
-Igloo is an open-source application designed to improve workflows for Windows
-and network admins. It uses Python and PowerShell to simplify both common and
-advanced configurations on Windows machines.
-
-Granular configuration of Windows is typically achieved by PowerShell scripts
-or cumbersome one-liners in the PowerShell console. General configurations re
--quire clicking through the GUI, which is time-consuming and tedious.
-
-Igloo eliminates the need to research esoteric PowerShell command options or
-click through countless GUI windows by providing users with a simple command-li
--ne interface with syntax that is both terse and easily understandable.
-
-Thanks for giving Igloo a try. I hope it makes life easy.
+* Extended 'int' command functionality
+* Eliminated 'router' command set and replaced with 'bgp'
+* Cleaned up help files and fixed formatting errors
+* Extended support for cmd.exe commands within igloo
 
 Jared Elliott
-10/12/2019
+02/08/2020

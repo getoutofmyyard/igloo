@@ -3,7 +3,3 @@ Syntax:  ip address {prefix | address | dhcp} [subnet mask] [default gateway] {i
 Example: ip address 10.0.0.200/24 10.0.0.1 23
 Example: ip address 10.0.0.200 255.255.255.0 10.0.0.1 23
 Example: ip address dhcp 23
-
-* Use 'show ip address' or 'show int' to find the index number of a network interface.
-* The 'default gateway' parameter is optional.
-* You can use either CIDR or dotted-decimal notation for the mask, but not both

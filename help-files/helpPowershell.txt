@@ -1,2 +1,2 @@
-powershell ise                  - open powershell ise
-powershell policy		- configure powershell execution policies
+powershell ise          - open powershell ise
+powershell policy       - configure powershell execution policies

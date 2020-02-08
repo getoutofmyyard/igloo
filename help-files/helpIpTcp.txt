@@ -1,7 +1,7 @@
-ip tcp auto-tune		- configure tcp auto-tuning for long fat networks
-ip tcp ecn			- toggle support for explicit congestion notifications
-ip tcp mpp			- toggle tcp memory pressure protection
-ip tcp provider			- configure the local tcp congestion provider
-ip tcp port-range		- configure the ephemeral port range for client connections
-ip tcp timestamp 		- toggle tcp timestamps
-ip tcp window-restart		- toggle the tcp congestion window restart feature
+ip tcp auto-tune        - configure tcp auto-tuning for long fat networks
+ip tcp ecn              - toggle support for explicit congestion notifications
+ip tcp mpp              - toggle tcp memory pressure protection
+ip tcp provider         - configure the local tcp congestion provider
+ip tcp port-range       - configure the ephemeral port range for client connections
+ip tcp timestamp        - toggle tcp timestamps
+ip tcp window-restart   - toggle the tcp congestion window restart feature

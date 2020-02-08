@@ -1,2 +1,2 @@
-http-activation       - HTTP Activation
-non-http-activation   - Non-HTTP Activation
+http-activation           - HTTP Activation
+non-http-activation       - Non-HTTP Activation

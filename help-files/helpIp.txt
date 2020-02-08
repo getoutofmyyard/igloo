@@ -1,9 +1,9 @@
-ip address			- configure static ipv4 addresses
-ip icmp				- configure icmp options
-ip igmp				- configure igmp options
-ip metric			- configure route metrics
-ip multicast			- enable or disable multicast forwarding
-ip route			- configure ip routing entries, metrics, and advertisements
-ip source-route			- configure what this device does with source-routed packets
-ip tcp				- configure tcp options
-ip ttl				- configure the default time-to-live for outgoing packets
+ip address          - configure static ipv4 addresses
+ip icmp             - configure icmp options
+ip igmp             - configure igmp options
+ip metric           - configure route metrics
+ip multicast        - enable or disable multicast forwarding
+ip route            - configure ip routing entries, metrics, and advertisements
+ip source-route     - configure what this device does with source-routed packets
+ip tcp              - configure tcp options
+ip ttl              - configure the default time-to-live for outgoing packets

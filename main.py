@@ -14,6 +14,7 @@ from winInstallers import *
 from fping import *
 from bgpRouting import *
 from deploy import *
+from common import *
 
 def parse_file(filepath):
     # Reads file, splits into an array, and returns the array
@@ -36,41 +37,6 @@ win_os_cmds = parse_file('.\\command-sets\\winOsCmds.txt')
 win_popen_cmds = parse_file('.\\command-sets\\winPopenCmds.txt')
 ssh_cmds = parse_file('.\\command-sets\\sshCmds.txt')
 
-yes = ['y', 'Y', 'yes', 'Yes']
-no = ['n', 'N', 'no', 'No']
-
-quit = ['exit','end','bye','quit','leave','esc']
-
-#invoke cmd.exe when these terms are discovered
-cmd_exe_options = ['tftp','ftp','telnet','netsh','nslookup',\
-                   'ping','tracert','ipconfig']
-
-def newline():
-    print('')
-
-def read_file(filepath):
-    # Reads a file. Used most often for help files.
-    try:
-        with open(filepath,'r') as file:
-            print(file.read())
-            newline()
-    except:
-        newline()
-        print('error~! Help file ' + filepath + ' is missing.')
-        newline()
-
-def splash_screen():
-    # Displays the Igloo splash screen
-    newline()
-    read_file('.\\miscellaneous\\splash.txt')
-
-def pshell_decoder(command_to_decode):
-    # Runs pshell command and decodes the output
-    get_output = subprocess.Popen(['powershell.exe', command_to_decode],\
-    stdout=subprocess.PIPE)
-    decoded_output = get_output.communicate()[0].decode('iso-8859-1')
-    return decoded_output
-
 def admin_check():
     # Checks to see if user ran Igloo as admin.
     # If not, prompt user to elevate privileges.
@@ -92,11 +58,9 @@ def check_pshell_profile():
     # skip this process if execution policy is resrictive.
 
     try:
-
         exec_policy = pshell_decoder('Get-ExecutionPolicy')
 
         with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'r') as file:
-
             # format the file
             read_file = file.read()
             split_file = read_file.split('\n')
@@ -106,19 +70,22 @@ def check_pshell_profile():
             ticker = 1
 
             for line in split_file:
-
                 # search the profile for the igloo alias. if it exists,
                 # exit the loop and do nothing. else, append to the profile.
                 ticker = ticker + 1
+
                 if line == 'Set-Alias -Name igloo -Value \'.\\igloo.exe\'':
                     ps_file = 0
                     break
+
                 else:
                     ps_file = 1
+
                     if len(split_file) == ticker - 1 \
                     and ps_file == 1:
                         with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'a') as file:
                             file.write('\nSet-Alias -Name igloo -Value \'.\\igloo.exe\'')
+
                     else:
                         pass
 
@@ -161,6 +128,21 @@ def show_tree(show_command):
             stripped_output = policy_level.rstrip()
             print('notify~! PowerShell execution policy is {}.'.format(stripped_output))
             newline()
+
+        elif show_command == 'show cidr-table':
+            read_file("C:\\Users\\Jesus Christ\\Desktop\\igloo-dev\\help-files\\helpCidrTable.txt")
+
+        elif show_command == 'show log app':
+            pshell_decoder('Get-EventLog -LogName Application -Newest 5000 | Select-Object Index,TimeGenerated,Source,Message | Format-Table -AutoSize -Wrap > ./applog.txt')
+            pshell_decoder('notepad.exe ./applog.txt')
+
+        elif show_command == 'show log sec':
+            pshell_decoder('Get-EventLog -LogName Security -Newest 5000 | Format-Table  -Wrap -AutoSize > seclog.txt')
+            pshell_decoder('notepad.exe ./seclog.txt')
+
+        elif show_command == 'show log sys':
+            pshell_decoder('get-eventlog -LogName System -Newest 5000 | Select-Object Index,TimeGenerated,EntryType,Message | Format-Table -Wrap -AutoSize > syslog.txt')
+            pshell_decoder('notepad.exe ./syslog.txt')
         else:
             pass
 
@@ -240,9 +222,19 @@ def crypto_tree(crypto_command):
 def int_tree(int_command):
 
     split_cmd = int_command.split(' ')
-    int_index = split_cmd[1]
+    int_index = split_cmd[2]
 
-    if 'on' in int_command:
+    if int_command == 'int reset *':
+        get_nics = pshell_decoder('Restart-NetAdapter -Name \'*\' -WhatIf | sort-object')
+        strip_nics = get_nics.strip()
+        newline()
+        print(strip_nics.replace("What if: Restart-NetAdapter", "notify~! Restarting network adapter"))
+        resetNics = subprocess.call(['powershell.exe', 'Restart-NetAdapter -Name \'*\''], stdout=open(os.devnull, 'wb'))
+        newline()
+        print('notify~! Network adapters restarted successfully')
+        newline()
+
+    elif 'enable' in int_command:
         get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(int_index))
 
         split_list = get_int_list.split('----')
@@ -264,10 +256,10 @@ def int_tree(int_command):
             print('notify~! Interface {} has been enabled'.format(int_name))
             newline()
 
-    elif 'off' in int_command:
+    elif 'disable' in int_command:
 
         split_cmd = int_command.split(' ')
-        int_index = split_cmd[1]
+        int_index = split_cmd[2]
 
         get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(int_index))
 
@@ -291,15 +283,33 @@ def int_tree(int_command):
             print('notify~! Interface {} has been disabled'.format(int_name))
             newline()
 
-def router_tree(router_command):
-    if 'bgp' in router_command:
-        bgp_routing(router_command)
-    elif 'rip' in router_command:
-        rip_routing()
-    elif 'ospf' in router_command:
-        ospf_routing()
-    else:
-        return
+    elif 'reset' in int_command:
+
+        split_cmd = int_command.split(' ')
+        int_index = split_cmd[2]
+
+        get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(int_index))
+
+        split_list = get_int_list.split('----')
+        get_name = split_list[1]
+        int_name = '\'' + get_name.strip() + '\''
+
+        disable_adapter = pshell_decoder('Disable-NetAdapter -Name {} -Confirm:$False'.format(int_name))
+        enable_adapter = pshell_decoder('Enable-NetAdapter -Name {}'.format(int_name))
+
+
+        if 'Disable-NetAdapter : Access is denied.' in disable_adapter:
+            newline()
+            print('error~! This action requires admin rights!')
+            newline()
+        elif 'No MSFT_NetAdapter objects found' in disable_adapter:
+            newline()
+            print('notify~! Interface does not exist. Use \'show int\' and \'int ?\' for help')
+            newline()
+        else:
+            newline()
+            print('notify~! Interface {} has been reset'.format(int_name))
+            newline()
 
 def cli():
 
@@ -369,18 +379,14 @@ def cli():
 
             elif strip_cmd in show_cmds:
                 show_tree(strip_cmd)
-
             elif strip_cmd in win_os_cmds:
                 win_os_tree(strip_cmd)
-
             elif strip_cmd in win_popen_cmds:
                 win_popen_tree(strip_cmd)
-
             elif strip_cmd in crypto_general:
                 crypto_tree(strip_cmd)
-
-            elif 'router' in strip_cmd:
-                router_tree(strip_cmd)
+            elif 'bgp' in strip_cmd:
+                bgp_routing(strip_cmd)
 
             elif 'crypto del' in strip_cmd:
                 # A redundant entry is necessary due to the variable
@@ -389,13 +395,10 @@ def cli():
 
             elif 'crypto connect' in strip_cmd:
                 crypto_tree(strip_cmd)
-
             elif strip_cmd in fwall_show:
                 fwall_display(strip_cmd)
-
             elif strip_cmd in fwall_general:
                 fwall_toggle(strip_cmd)
-
             elif 'fwall entry' in strip_cmd:
                 if len(split_cmd) == 7:
                     fwall_rule_config(split_cmd)
@@ -408,48 +411,34 @@ def cli():
 
             elif strip_cmd in install_cmds:
                 install_tree(strip_cmd)
-
             elif strip_cmd in uninstall_cmds:
                 uninstall_tree(strip_cmd)
-
             elif 'int' in strip_cmd:
                 int_tree(strip_cmd)
-
             elif 'tcp connect' in strip_cmd:
                 tcp_connect(strip_cmd)
-
             elif 'tcp scan' in strip_cmd:
                 tcp_scan(strip_cmd)
-
             elif strip_cmd == 'tcp reset':
                 net_reset()
-
             elif 'no ip route' in strip_cmd:
                 no_ip_route(strip_cmd)
-
             elif 'ip route' in strip_cmd:
                 ip_route(strip_cmd)
-
             elif 'ip route-cache' in strip_cmd:
                 ip_route_cache(strip_cmd)
-
             elif 'ip ttl' in strip_cmd:
                 ip_ttl(strip_cmd)
-
             elif 'ip address dhcp' in strip_cmd:
                 ip_address_dhcp(strip_cmd)
-
             elif 'ip address' in strip_cmd:
                 ip_address_config(strip_cmd)
-
             elif 'ip tcp window-restart' in strip_cmd \
             or 'ip tcp provider' in strip_cmd \
             or 'ip tcp port-range' in strip_cmd:
                 ip_tcp_config(strip_cmd)
-
             elif strip_cmd in ip_cmds:
                 ip_general(strip_cmd)
-
             elif strip_cmd in ssh_cmds:
                 if 'write' in strip_cmd:
                     ssh_write_init(strip_cmd)
@@ -457,7 +446,6 @@ def cli():
                     ssh_show_init(strip_cmd)
                 else:
                     pass
-
             elif 'web' in strip_cmd:
                 for line in webDict.web_dictionary:
                     if line == strip_cmd:
@@ -468,19 +456,23 @@ def cli():
                         newline()
                     else:
                         pass
-
             elif strip_cmd == 'notepad':
                 subprocess.call(['notepad.exe'])
-
             elif strip_cmd == 'update':
                 update_windows()
-
             elif 'fping' in strip_cmd:
                 fping_script()
-
             elif split_cmd[0] in cmd_exe_options:
                 try:
                     os.system(strip_cmd)
+                    newline()
+                except KeyboardInterrupt:
+                    newline()
+                    newline()
+
+            elif split_cmd[0] in pshell_exe_options:
+                try:
+                    subprocess.call(['powershell.exe', strip_cmd])
                     newline()
                 except KeyboardInterrupt:
                     newline()
