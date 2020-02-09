@@ -110,8 +110,9 @@ igloo~$ show bgp ?
 advert              - display bgp routes advertised to peers
 id                  - display local bgp configuration
 peer                - display bgp peer configuration
+```
 Igloo includes a great deal of help output, which can be triggered by entering an incomplete command or using the ? character after an incomplete command. Igloo does not support autocomplete at this time.
-
+```
 igloo~$ ip address ?
 
 Syntax:  ip address {prefix | address | dhcp} [subnet mask] [default gateway] {interface index}
