@@ -34,33 +34,43 @@ def tcp_scan(tcp_arg):
         newline()
     newline()
 
-def tcp_connect(tcp_conn_arg):
-    command_parse = tcp_conn_arg.split(' ')
-    if len(command_parse) == 5:
-        destination_host = command_parse[2]
-        destination_port = command_parse[4]
 
-        send_syn = pshell_decoder('test-netconnection -ComputerName ' + destination_host + ' -Port ' + destination_port)
-
-        # Find the line with the TcpTestSucceeded result
-        send_syn_lines = send_syn.splitlines()
-        for line in send_syn_lines:
-            if 'TcpTestSucceeded' in line:
-                # Check if there is true in that line's output
-                if 'True' in line:
-                    newline()
-                    print('notify~! Success: SYN+ACK received from remote host %s:%s.' %  (destination_host,destination_port))
-                    newline()
-                    return
-                else :        
-                    newline()
-                    print('notify~! Failure: No SYN+ACK received from remote host %s:%s.' % (destination_host,destination_port))
-                    newline()
-                    return
-    else:
+def tcp_ping(tcp_ping_arg):
+    command_parse = tcp_ping_arg.split(' ')
+    if len(command_parse) == 4:
+        remote_device = command_parse[2]
+        port_number = int(command_parse[3])
+        remote_device_ip  = socket.gethostbyname(remote_device)
+        socket.setdefaulttimeout(0.02)
         newline()
-        read_file('.\\help-files\\helpTcpConnect.txt')
+        #print ('\nnotify~! Attempting connections against {} on TCP port {}...\n'.format(remote_device_ip, str(port_number)))
 
+        count = 0
+        ack_count = 0
+        try:
+            for ping in range(5):
+                count = count + 1
+                start_scan = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                send_tcp_syns = start_scan.connect_ex((remote_device_ip, port_number))
+                if send_tcp_syns == 0:
+                    ack_count = ack_count + 1
+                    print('!', end = '')
+                    start_scan.shutdown(1)
+                    start_scan.close()
+                else:
+                    print('.', end = '')
+                    pass
+
+                if count == 5:
+                    print('\n\nnotify~! {}/5 TCP SYN+ACKs received.\n'.format(ack_count, port_number))
+
+        except socket.gaierror:
+            newline()
+            print ('notify~! DNS lookup failure.')
+            newline()
+
+    else:
+          pass
 
 def net_reset():
     get_nics = pshell_decoder('Restart-NetAdapter -Name \'*\' -WhatIf | sort-object')

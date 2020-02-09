@@ -1,0 +1,2 @@
+Syntax:  tcp ping [host] [port]
+Example: tcp ping 10.0.0.1 80

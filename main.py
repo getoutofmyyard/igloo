@@ -117,7 +117,7 @@ def show_tree(show_command):
                     newline()
                 elif 'Get-BgpRouteAggregate' in output:
                     newline()
-                    print('notify~! This machine has unmet dependencies for BGP routing. Use \'router bgp enable\'')
+                    print('notify~! This machine has unmet dependencies for BGP routing. Use \'bgp enable\'')
                     newline()
 
                 else:
@@ -387,12 +387,8 @@ def cli():
                 crypto_tree(strip_cmd)
             elif 'bgp' in strip_cmd:
                 bgp_routing(strip_cmd)
-
             elif 'crypto del' in strip_cmd:
-                # A redundant entry is necessary due to the variable
-                # nature of certain commands.
                 crypto_tree(strip_cmd)
-
             elif 'crypto connect' in strip_cmd:
                 crypto_tree(strip_cmd)
             elif strip_cmd in fwall_show:
@@ -408,17 +404,16 @@ def cli():
                     newline()
                     read_file('.\\help-files\\helpFwallEntry.txt')
                     pass
-
             elif strip_cmd in install_cmds:
                 install_tree(strip_cmd)
             elif strip_cmd in uninstall_cmds:
                 uninstall_tree(strip_cmd)
             elif 'int' in strip_cmd:
                 int_tree(strip_cmd)
-            elif 'tcp connect' in strip_cmd:
-                tcp_connect(strip_cmd)
             elif 'tcp scan' in strip_cmd:
                 tcp_scan(strip_cmd)
+            elif 'tcp ping' in strip_cmd:
+                tcp_ping(strip_cmd)
             elif strip_cmd == 'tcp reset':
                 net_reset()
             elif 'no ip route' in strip_cmd:
