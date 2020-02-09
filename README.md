@@ -42,10 +42,14 @@ notify~! Installing RRAS routing features
 notify~! Installing RSAT
 notify~! Enabling BGP routing
 notify~! Dependencies installed successfully. Use 'win reboot' to enable BGP routing features.
+
 igloo~$ router bgp id 10.0.0.33 64513
+
 notify~! Creating BGP routing instance
 notify~! BGP routing identity created. RID=10.0.0.33 AS=64513
+
 igloo~$ router bgp peer mypeer 10.0.0.1 64513 10.0.0.33
+
 notify~! Configuring BGP peer...
 notify~! BGP peering with 10.0.0.1 (AS 64513) has been enabled
 
