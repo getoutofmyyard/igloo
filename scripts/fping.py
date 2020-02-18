@@ -1,5 +1,6 @@
-import subprocess, os
-from common import *
+import subprocess
+import os
+from common import pshell_decoder, newline
 
 def fping_script():
     newline()

@@ -1,77 +1,88 @@
-import subprocess, os, sys, ctypes, netmiko, getpass, random, webbrowser
-import asyncio, re
+import ctypes
+import os
+import subprocess
+import sys
+import webbrowser
+
 sys.path.insert(1, '.\\scripts')
-import conversion, helpDict, showDict, winOsDict, winPopenDict, installDict
-import webDict, uninstallDict, manual
-from datetime import datetime
+
+from bgpRouting import *
+from common import *
 from crypto import *
+from deploy import *
+from fping import *
 from fwall import *
-from tcp import *
+from interfaces import *
 from ipconf import *
+from showExcept import *
 from sshSet import *
+from tcp import *
 from updateWindows import *
 from winInstallers import *
-from fping import *
-from bgpRouting import *
-from deploy import *
-from common import *
+import helpDict
+import manual
+import showDict
+import webDict
+import winOsDict
+import winPopenDict
+
 
 def parse_file(filepath):
-    # Reads file, splits into an array, and returns the array
     with open(filepath) as file:
         split_file = file.read().split('\n')
         return split_file
 
-# Command lists. Checked against user input for initial piping into
-# the various command trees below.
-crypto_general = parse_file('.\\command-sets\\cryptoCmds.txt')
-crypto_ipsec = parse_file('.\\command-sets\\cryptoIpsecCmds.txt')
-crypto_pptp = parse_file('.\\command-sets\\cryptoPptpCmds.txt')
-fwall_general = parse_file('.\\command-sets\\fwallCmds.txt')
-fwall_show = parse_file('.\\command-sets\\fwallShowCmds.txt')
-install_cmds = parse_file('.\\command-sets\\installCmds.txt')
-uninstall_cmds = parse_file('.\\command-sets\\uninstallCmds.txt')
-ip_cmds = parse_file('.\\command-sets\\ipCmds.txt')
-show_cmds = parse_file('.\\command-sets\\showCmds.txt')
-win_os_cmds = parse_file('.\\command-sets\\winOsCmds.txt')
-win_popen_cmds = parse_file('.\\command-sets\\winPopenCmds.txt')
-ssh_cmds = parse_file('.\\command-sets\\sshCmds.txt')
+# Command lists
 
+CRYPTO_GENERAL = parse_file('.\\command-sets\\cryptoCmds.txt')
+CRYPTO_IPSEC = parse_file('.\\command-sets\\cryptoIpsecCmds.txt')
+CRYPTO_PPTP = parse_file('.\\command-sets\\cryptoPptpCmds.txt')
+FWALL_GENERAL = parse_file('.\\command-sets\\fwallCmds.txt')
+FWALL_SHOW = parse_file('.\\command-sets\\fwallShowCmds.txt')
+INSTALL_CMDS = parse_file('.\\command-sets\\installCmds.txt')
+UNINSTALL_CMDS = parse_file('.\\command-sets\\uninstallCmds.txt')
+IP_CMDS = parse_file('.\\command-sets\\ipCmds.txt')
+SHOW_CMDS = parse_file('.\\command-sets\\showCmds.txt')
+WIN_OS_CMDS = parse_file('.\\command-sets\\winOsCmds.txt')
+WIN_POPEN_CMDS = parse_file('.\\command-sets\\winPopenCmds.txt')
+SSH_CMDS = parse_file('.\\command-sets\\sshCmds.txt')
+
+
+# Check to see if user ran Igloo as admin
 def admin_check():
-    # Checks to see if user ran Igloo as admin.
-    # If not, prompt user to elevate privileges.
+
     is_an_admin = ctypes.windll.shell32.IsUserAnAdmin()
-    if is_an_admin == 0:
-        with open('.\\miscellaneous\\no_admin.txt','r') as file:
+
+    if is_an_admin == False:
+        with open('.\\miscellaneous\\no_admin.txt', 'r') as file:
             print(file.read())
             cli()
             sys.exit()
 
+
+# Return current username
 def who_am_i():
-    # Returns current username
     get_username = pshell_decoder('whoami')
-    format_username = get_username.split("\\",1)[1].strip()
+    format_username = get_username.split("\\", 1)[1].strip()
     return format_username
 
+
 def check_pshell_profile():
-    # creates alias for igloo upon launch.
+    # creates powershell alias for igloo upon launch.
     # skip this process if execution policy is resrictive.
 
     try:
         exec_policy = pshell_decoder('Get-ExecutionPolicy')
 
-        with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'r') as file:
+        with open('C:\\Windows\\System32\\\
+            WindowsPowerShell\\v1.0\\profile.ps1', 'r') as file:
             # format the file
             read_file = file.read()
             split_file = read_file.split('\n')
 
-            # use a ticker to track progress of the for loop 
-            # across the lines of the powershell profile
             ticker = 1
 
             for line in split_file:
-                # search the profile for the igloo alias. if it exists,
-                # exit the loop and do nothing. else, append to the profile.
                 ticker = ticker + 1
 
                 if line == 'Set-Alias -Name igloo -Value \'.\\igloo.exe\'':
@@ -81,79 +92,31 @@ def check_pshell_profile():
                 else:
                     ps_file = 1
 
-                    if len(split_file) == ticker - 1 \
-                    and ps_file == 1:
-                        with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'a') as file:
-                            file.write('\nSet-Alias -Name igloo -Value \'.\\igloo.exe\'')
+                    if len(split_file) == ticker - 1 and ps_file == 1:
+                        with open('C:\\Windows\\System32\\WindowsPowerShell\
+                            \\v1.0\\profile.ps1', 'a') as file:
+
+                            file.write('\nSet-Alias -Name igloo -Value \
+                                \'.\\igloo.exe\'')
 
                     else:
                         pass
 
     except FileNotFoundError:
+
         if 'Restricted' in exec_policy:
             pass
+
         else:
-            with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\profile.ps1', 'w+') as file:
+            with open('C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\\
+                profile.ps1', 'w+') as file:
+
                 file.write('Set-Alias -Name igloo -Value \'.\\igloo.exe\'')
 
-def show_tree(show_command):
-    # Search showDict.py for relevant command
-    newline()
-    try:
-        for command in showDict.show_command_set:
-            if command == show_command:
-                output = pshell_decoder(showDict.show_command_set.get(command))
-                if command == 'show ip public':
-                    newline()
-                    print('notify~! Your translated address is ' + output)
-                elif command == 'show ipv6 public':
-                    format_output = output.split(',')[1]
-                    newline()
-                    print('notify~! Your translated address is ' + format_output)
-                    newline()
-                elif 'Get-BgpPeer' in output \
-                or 'Get-BgpRouter' in output:
-                    print('notify~! BGP routing is not enabled for this machine')
-                    newline()
-                elif 'Get-BgpRouteAggregate' in output:
-                    newline()
-                    print('notify~! This machine has unmet dependencies for BGP routing. Use \'bgp enable\'')
-                    newline()
 
-                else:
-                    print(output)
-
-        if show_command == 'show powershell policy':
-            policy_level = pshell_decoder('Get-ExecutionPolicy')
-            stripped_output = policy_level.rstrip()
-            print('notify~! PowerShell execution policy is {}.'.format(stripped_output))
-            newline()
-
-        elif show_command == 'show cidr-table':
-            read_file("C:\\Users\\Jesus Christ\\Desktop\\igloo-dev\\help-files\\helpCidrTable.txt")
-
-        elif show_command == 'show log app':
-            pshell_decoder('Get-EventLog -LogName Application -Newest 5000 | Select-Object Index,TimeGenerated,Source,Message | Format-Table -AutoSize -Wrap > ./applog.txt')
-            pshell_decoder('notepad.exe ./applog.txt')
-
-        elif show_command == 'show log sec':
-            pshell_decoder('Get-EventLog -LogName Security -Newest 5000 | Format-Table  -Wrap -AutoSize > seclog.txt')
-            pshell_decoder('notepad.exe ./seclog.txt')
-
-        elif show_command == 'show log sys':
-            pshell_decoder('get-eventlog -LogName System -Newest 5000 | Select-Object Index,TimeGenerated,EntryType,Message | Format-Table -Wrap -AutoSize > syslog.txt')
-            pshell_decoder('notepad.exe ./syslog.txt')
-        else:
-            pass
-
-    except:
-        newline()
-        print('error~! An exception occurred. Cancelling operation.')
-        newline()
-
+# Search winOsDict.py for relevant command
 def win_os_tree(win_os_command):
-    # Search winOsDict.py for relevant command. Use os_run()
-    # for .cpl and .msc compatibility.
+
     try:
         for command in winOsDict.win_os_command_set:
             if command == win_os_command:
@@ -163,28 +126,42 @@ def win_os_tree(win_os_command):
     except:
         pass
 
+
+# Search winPopenDict.py for relevant command.
 def win_popen_tree(win_popen_command):
-    # Search winPopenDict.py for relevant command.
+    
     try:
+
         for command in winPopenDict.win_popen_command_set:
+
             if command == win_popen_command:
                 subprocess.Popen(winPopenDict.win_popen_command_set.get(command))
             else:
                 pass
 
         if win_popen_command == 'win reboot':
+
             reboot_loop_keepalive = 1
+
             newline()
+
             while reboot_loop_keepalive == 1:
-                reboot_confirm = input("confirm~! Are you sure you want to reboot? (y/n) ")
+
+                reboot_confirm = input('confirm~! Are you sure you' \
+                    + 'want to reboot? (y/n) ')
+
                 if reboot_confirm in yes:
                     reboot_loop_keepalive = 0
-                    subprocess.Popen("shutdown /r /t 0")
+
+                    subprocess.Popen('shutdown /r /t 0')
+
                 elif reboot_confirm in no:
                     reboot_loop_keepalive = 0
+
                     newline()
                     print('notify~! Reboot cancelled.')
                     newline()
+
                 else:
                     pass
     except:
@@ -195,23 +172,28 @@ def crypto_tree(crypto_command):
     # a command in 'cryptoCmds.txt'. Most functions are
     # called from crypto.py
 
-    if crypto_command in crypto_ipsec:
+    if crypto_command in CRYPTO_IPSEC:
         crypto_ipsec_options(crypto_command)
-    elif crypto_command in crypto_pptp:
+    elif crypto_command in CRYPTO_PPTP:
         crypto_pptp_options(crypto_command)
     elif crypto_command == 'crypto generate psk':
         generate_psk()
     elif crypto_command == 'crypto generate rsa':
         generate_rsa()
+
     elif 'crypto del' in crypto_command:
         split_command = crypto_command.split(' ')
+
         if len(split_command) == 3:
             vpn_name = split_command[2]
             crypto_delete(vpn_name)
+
         else:
             pass
+
     elif 'crypto connect' in crypto_command:
         split_command = crypto_command.split(' ')
+
         if len(split_command) == 3:
             vpn_name = split_command[2]
             crypto_go(vpn_name)
@@ -219,119 +201,24 @@ def crypto_tree(crypto_command):
         else:
             pass
 
-def int_tree(int_command):
-
-    split_cmd = int_command.split(' ')
-    int_index = split_cmd[2]
-
-    if int_command == 'int reset *':
-        get_nics = pshell_decoder('Restart-NetAdapter -Name \'*\' -WhatIf | sort-object')
-        strip_nics = get_nics.strip()
-        newline()
-        print(strip_nics.replace("What if: Restart-NetAdapter", "notify~! Restarting network adapter"))
-        resetNics = subprocess.call(['powershell.exe', 'Restart-NetAdapter -Name \'*\''], stdout=open(os.devnull, 'wb'))
-        newline()
-        print('notify~! Network adapters restarted successfully')
-        newline()
-
-    elif 'enable' in int_command:
-        get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(int_index))
-
-        split_list = get_int_list.split('----')
-        get_name = split_list[1]
-        int_name = '\'' + get_name.strip() + '\''
-
-        enable_adapter = pshell_decoder('Enable-NetAdapter -Name {}'.format(int_name))
-
-        if 'Enable-NetAdapter : Access is denied.' in enable_adapter:
-            newline()
-            print('error~! This action requires admin rights!')
-            newline()
-        elif 'No MSFT_NetAdapter objects found' in enable_adapter:
-            newline()
-            print('notify~! Interface does not exist. Use \'show int\' and \'int ?\' for help')
-            newline()
-        else:
-            newline()
-            print('notify~! Interface {} has been enabled'.format(int_name))
-            newline()
-
-    elif 'disable' in int_command:
-
-        split_cmd = int_command.split(' ')
-        int_index = split_cmd[2]
-
-        get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(int_index))
-
-        split_list = get_int_list.split('----')
-        get_name = split_list[1]
-        int_name = '\'' + get_name.strip() + '\''
-
-        disable_adapter = pshell_decoder('Disable-NetAdapter -Name {} -Confirm:$False'.format(int_name))
-
-
-        if 'Disable-NetAdapter : Access is denied.' in disable_adapter:
-            newline()
-            print('error~! This action requires admin rights!')
-            newline()
-        elif 'No MSFT_NetAdapter objects found' in disable_adapter:
-            newline()
-            print('notify~! Interface does not exist. Use \'show int\' and \'int ?\' for help')
-            newline()
-        else:
-            newline()
-            print('notify~! Interface {} has been disabled'.format(int_name))
-            newline()
-
-    elif 'reset' in int_command:
-
-        split_cmd = int_command.split(' ')
-        int_index = split_cmd[2]
-
-        get_int_list = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Select-Object Name | Format-Table -AutoSize'.format(int_index))
-
-        split_list = get_int_list.split('----')
-        get_name = split_list[1]
-        int_name = '\'' + get_name.strip() + '\''
-
-        disable_adapter = pshell_decoder('Disable-NetAdapter -Name {} -Confirm:$False'.format(int_name))
-        enable_adapter = pshell_decoder('Enable-NetAdapter -Name {}'.format(int_name))
-
-
-        if 'Disable-NetAdapter : Access is denied.' in disable_adapter:
-            newline()
-            print('error~! This action requires admin rights!')
-            newline()
-        elif 'No MSFT_NetAdapter objects found' in disable_adapter:
-            newline()
-            print('notify~! Interface does not exist. Use \'show int\' and \'int ?\' for help')
-            newline()
-        else:
-            newline()
-            print('notify~! Interface {} has been reset'.format(int_name))
-            newline()
-
 def cli():
 
     prompt_keepalive = 1
 
-    # CLI prompts user for input as long as prompt_keepalive == 1
     while prompt_keepalive == 1:
+
         try:
+
             if len(sys.argv) > 1:
                 user_cmd = ' '.join(sys.argv[1:])
                 prompt_keepalive = 0
+
             else:
                 user_cmd = input("igloo~$ ")
 
-
-            # Remove whitespace from user input
             strip_cmd = user_cmd.rstrip()
-
-            # Split user input into an array
             split_cmd = strip_cmd.split(' ')
 
-            # Compare user input against help output triggers
             if strip_cmd in helpDict.help_dictionary:
                 newline()
                 for command in helpDict.help_dictionary:
@@ -346,13 +233,11 @@ def cli():
                 time.sleep(1)
                 exit()
 
-            elif strip_cmd == 'calc':
-                subprocess.call('calc')
-
             elif strip_cmd == 'igloo':
                 try:
                     newline()
-                    try_exe = pshell_decoder('Start \'C:\\Program Files\\Igloo\\igloo.exe\'')
+                    try_exe = pshell_decoder('Start \'C:\\Program Files\
+                        \\Igloo\\igloo.exe\'')
                     if 'Start' in try_exe:
                         print('error~! File not found!')
                     newline()
@@ -366,24 +251,22 @@ def cli():
                     if line == strip_cmd:
                         key = manual.manual_dictionary.get(line)
                         newline()
-                        print('notify~! Opening {} with default browser.'.format(key))
+                        print('notify~! Opening {} with default browser.\
+                            '.format(key))
                         webbrowser.open_new(key)
                         newline()
 
-
-            # Compare user input against actionable commands. Send to
-            # the appropriate command tree (a function) if there is a match.
-
             elif strip_cmd == 'deploy ad-ds':
                 active_directory_deployment(strip_cmd)
-
-            elif strip_cmd in show_cmds:
+            elif strip_cmd == 'deploy bgp':
+                deploy_bgp()
+            elif strip_cmd in SHOW_CMDS:
                 show_tree(strip_cmd)
-            elif strip_cmd in win_os_cmds:
+            elif strip_cmd in WIN_OS_CMDS:
                 win_os_tree(strip_cmd)
-            elif strip_cmd in win_popen_cmds:
+            elif strip_cmd in WIN_POPEN_CMDS:
                 win_popen_tree(strip_cmd)
-            elif strip_cmd in crypto_general:
+            elif strip_cmd in CRYPTO_GENERAL:
                 crypto_tree(strip_cmd)
             elif 'bgp' in strip_cmd:
                 bgp_routing(strip_cmd)
@@ -391,9 +274,9 @@ def cli():
                 crypto_tree(strip_cmd)
             elif 'crypto connect' in strip_cmd:
                 crypto_tree(strip_cmd)
-            elif strip_cmd in fwall_show:
+            elif strip_cmd in FWALL_SHOW:
                 fwall_display(strip_cmd)
-            elif strip_cmd in fwall_general:
+            elif strip_cmd in FWALL_GENERAL:
                 fwall_toggle(strip_cmd)
             elif 'fwall entry' in strip_cmd:
                 if len(split_cmd) == 7:
@@ -403,10 +286,9 @@ def cli():
                 else:
                     newline()
                     read_file('.\\help-files\\helpFwallEntry.txt')
-                    pass
-            elif strip_cmd in install_cmds:
+            elif strip_cmd in INSTALL_CMDS:
                 install_tree(strip_cmd)
-            elif strip_cmd in uninstall_cmds:
+            elif strip_cmd in UNINSTALL_CMDS:
                 uninstall_tree(strip_cmd)
             elif 'int' in strip_cmd:
                 int_tree(strip_cmd)
@@ -428,13 +310,13 @@ def cli():
                 ip_address_dhcp(strip_cmd)
             elif 'ip address' in strip_cmd:
                 ip_address_config(strip_cmd)
-            elif 'ip tcp window-restart' in strip_cmd \
-            or 'ip tcp provider' in strip_cmd \
-            or 'ip tcp port-range' in strip_cmd:
+            elif ('ip tcp window-restart' in strip_cmd
+                   or 'ip tcp provider' in strip_cmd
+                   or 'ip tcp port-range' in strip_cmd):
                 ip_tcp_config(strip_cmd)
-            elif strip_cmd in ip_cmds:
+            elif strip_cmd in IP_CMDS:
                 ip_general(strip_cmd)
-            elif strip_cmd in ssh_cmds:
+            elif strip_cmd in SSH_CMDS:
                 if 'write' in strip_cmd:
                     ssh_write_init(strip_cmd)
                 elif 'show' in strip_cmd:
@@ -446,13 +328,12 @@ def cli():
                     if line == strip_cmd:
                         key = webDict.web_dictionary.get(line)
                         newline()
-                        print('notify~! Opening {} with default browser.'.format(key))
+                        print('notify~! Opening {} with default browser.\
+                            '.format(key))
                         webbrowser.open_new(key)
                         newline()
                     else:
                         pass
-            elif strip_cmd == 'notepad':
-                subprocess.call(['notepad.exe'])
             elif strip_cmd == 'update':
                 update_windows()
             elif 'fping' in strip_cmd:

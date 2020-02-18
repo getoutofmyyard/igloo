@@ -1,7 +1,7 @@
-import subprocess, os, re
-from re import *
+import subprocess
+
 from conversion import *
-from common import *
+from common import pshell_decoder, newline
 
 def os_error_message():
     newline()
@@ -38,7 +38,10 @@ def ip_route(add_this_route):
         next_hop = split_arg[3]
         int_index = split_arg[4]
         route_metric = split_arg[6]
-        add_route = pshell_decoder('new-netroute -DestinationPrefix '+dest_prefix+' -ifIndex ' +int_index + ' -NextHop '+ next_hop +' -RouteMetric ' + route_metric)
+        add_route = pshell_decoder('new-netroute -DestinationPrefix '\
+            +dest_prefix+' -ifIndex ' +int_index + ' -NextHop '\
+            + next_hop +' -RouteMetric ' + route_metric)
+
         if 'Instance MSFT_NetRoute already exists' in add_route:
             newline()
             print('error~! Route to destination prefix %s already in table.'\
@@ -57,7 +60,9 @@ def ip_route(add_this_route):
         next_hop = split_arg[3]
         int_index = split_arg[4]
 
-        add_route = pshell_decoder('new-netroute -DestinationPrefix '+dest_prefix+' -ifIndex '+int_index+' -NextHop '+next_hop+' | Out-Null')
+        add_route = pshell_decoder('new-netroute -DestinationPrefix '\
+            +dest_prefix+' -ifIndex '+int_index+' -NextHop '\
+            +next_hop+' | Out-Null')
 
         if 'Instance MSFT_NetRoute already exists' in add_route:
             newline()
@@ -97,7 +102,8 @@ def ip_ttl(ip_ttl_arg):
 
         if ttl_as_integer <= 255 \
         and ttl_as_integer > 0:
-            subprocess.call(['powershell.exe','Set-NetIpv4Protocol -DefaultHopLimit '+ packet_ttl])
+            subprocess.call(['powershell.exe','Set-NetIpv4Protocol '\
+                + '-DefaultHopLimit '+ packet_ttl])
             newline()
             print('notify~! TTL for outgoing packets set to %s.' % packet_ttl)
             newline()
@@ -118,7 +124,14 @@ def ip_address_config(ip_address_arg):
         interface_index = split_arg[5]
         cidr_lookup = cidr_dictionary.get(subnet_mask)
 
-        newline()
+        check_status = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Format-Table -HideTableHeaders -AutoSize'.format(interface_index))
+
+        if 'Disconnected' in check_status.strip():
+            newline()
+            print('error~! The specified interface is disabled.')
+            newline()
+            return
+
         print('notify~! Initializing route table lookup')
 
         route_lookup = pshell_decoder('get-netroute -addressfamily ipv4 | '\
@@ -129,11 +142,11 @@ def ip_address_config(ip_address_arg):
         if '0.0.0.0/0' in route_lookup.split('\n'):
             print('notify~! Flushing old default route from table')
             subprocess.call(['powershell', 'Remove-NetRoute -InterfaceIndex '\
-            +interface_index+' -destinationprefix 0.0.0.0/0 -Confirm:$False'\
+            + interface_index + '-destinationprefix 0.0.0.0/0 -Confirm:$False'\
             + ' | Out-Null'])
 
         remove_address = pshell_decoder('Remove-NetIpAddress -InterfaceIndex '\
-                       +interface_index+' -AddressFamily IPv4 -Confirm:$False | '\
+                       + interface_index +' -AddressFamily IPv4 -Confirm:$False | '\
                        + 'Out-Null')
 
         if 'Default loopback address cannot be deleted' in remove_address:
@@ -151,7 +164,7 @@ def ip_address_config(ip_address_arg):
 
             gateway_config = pshell_decoder('New-NetIPAddress -InterfaceIndex '\
                              + interface_index +' -IPAddress '+ip_address \
-                             +' -PrefixLength '+ cidr_lookup +' -DefaultGateway '\
+                             + ' -PrefixLength '+ cidr_lookup +' -DefaultGateway '\
                              + default_gateway)
 
             print('notify~! Restarting adapter')
@@ -159,8 +172,7 @@ def ip_address_config(ip_address_arg):
             split_list = get_int_list.split('----')
             get_name = split_list[1]
             int_name = '\'' + get_name.strip() + '\''
-            reset_adapter = pshell_decoder('Restart-NetAdapter -Name'\
-            +' {}'.format(int_name))
+            reset_adapter = pshell_decoder('Restart-NetAdapter -Name {}'.format(int_name))
 
 
             if 'Instance DefaultGateway already exists' in gateway_config:
@@ -281,6 +293,14 @@ def ip_address_config(ip_address_arg):
             newline()
             pass
         else:
+
+            check_status = pshell_decoder('Get-NetAdapter -InterfaceIndex {} | Format-Table -HideTableHeaders -AutoSize'.format(interface_index))
+
+            if 'Disconnected' in check_status.strip():
+                newline()
+                print('error~! The specified interface is disabled.')
+                newline()
+                return
 
             newline()
             print('notify~! Initializing route table lookup')

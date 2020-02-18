@@ -1,5 +1,5 @@
  # Command dictionary for the server install command set
-install_dictionary = {
+install = {
 	'install feature ad-cs':'Install-WindowsFeature -Name AD-Certificate -IncludeAllSubFeature',
 	'install feature ad-ds':'Install-WindowsFeature -Name AD-Domain-Services -IncludeAllSubFeature',
 	'install feature ad-fs':'Install-WindowsFeature -Name ADFS-Federation -IncludeAllSubFeature',

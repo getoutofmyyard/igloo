@@ -1,5 +1,5 @@
  # Command dictionary for the server uninstall command set
-uninstall_dictionary = {
+uninstall = {
 'uninstall feature ad-cs':'Uninstall-WindowsFeature -Name AD-Certificate',
 	'uninstall feature ad-ds':'Uninstall-WindowsFeature -Name AD-Domain-Services',
 	'uninstall feature ad-fs':'Uninstall-WindowsFeature -Name ADFS-Federation',

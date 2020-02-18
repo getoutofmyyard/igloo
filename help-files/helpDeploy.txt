@@ -1,2 +1,3 @@
-ad-ds           - Create an Active Directory forest and promote this server to domain controller
+ad-ds             - Create an Active Directory forest and promote this server to domain controller
+bgp               - Install prerequisites and enable BGP routing
 

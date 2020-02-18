@@ -1,4 +1,2 @@
 Syntax:  tcp scan {destination address or hostname}
 Example: tcp scan 10.0.0.1
-
-* Notifications are only triggered by successful SYN+ACKs

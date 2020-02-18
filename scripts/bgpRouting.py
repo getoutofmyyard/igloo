@@ -1,5 +1,6 @@
-import installDict, subprocess
-from common import *
+import installDict
+import subprocess
+from common import pshell_decoder, newline, yes, no
 
 
 # Install RRAS with BGP features only
@@ -73,17 +74,28 @@ def bgp_routing(bgp_command):
 
                 input_loop = 0
 
-                routing_lookup = installDict.install_dictionary.get('install feature routing')
-                rsat_lookup = installDict.install_dictionary.get('install feature rsat')
+                routing_lookup = installDict.install.get('install feature routing')
+                rsat_lookup = installDict.install.get('install feature rsat')
+
+                install_routing = pshell_decoder(routing_lookup)
+
+                if ('Install-WindowsFeature' in install_routing
+                    or 'Install-WindowsFeature' in install_rsat
+                    or 'Install-RemoteAccess' in install_routing
+                    or 'Install-RemoteAccess' in install_routing):
+                
+                    print('notify~! This command is supported only on Windows Server machines')
+                    newline()
+                    return
 
                 print('notify~! Installing RRAS routing features')
-                install_routing = pshell_decoder(routing_lookup)
 
                 if 'NoChangeNeeded' in install_routing:
                     print('notify~! Dependency already met: routing')
                     pass
 
                 print('notify~! Installing RSAT')
+
                 install_rsat = pshell_decoder(rsat_lookup)
 
                 if 'NoChangeNeeded' in install_rsat:
@@ -94,12 +106,6 @@ def bgp_routing(bgp_command):
                 or 'ArgumentNotValid' in install_rsat:
                     print('notify~! Feature is either unknown or has unmet dependencies.')
                     newline()
-
-                elif 'Install-WindowsFeature' in install_routing\
-                or 'Install-WindowsFeature' in install_rsat:
-                    print('notify~! This command is supported only on Windows Server machines')
-                    newline()
-                    pass
 
                 else:
                     bgp_install()

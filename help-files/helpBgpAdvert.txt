@@ -3,4 +3,4 @@ Include longer prefixes  : bgp advert 192.168.1.0/24
 Stop advertising prefix  : no bgp advert 10.0.0.0/16
 
 The 'summary' option is not required when disabling advertisements.
-Use 'man router' for detailed command information.
+Use 'man bgp' for detailed command information.

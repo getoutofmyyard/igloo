@@ -1,12 +1,151 @@
-import subprocess, asyncio, installDict, uninstallDict
+import subprocess
 from getpass import getpass
-from common import *
+
+import installDict
+
+from common import pshell_decoder, newline
+from bgpRouting import *
 
 letters_lower = 'abcdefghijklmnopqrstuvwxyz'
 letters_upper = letters_lower.upper()
 symbols = '!@#$%^&*()_+=-`~'
 numbers = '1234567890'
 
+def deploy_bgp():
+
+    newline()
+
+    routing_lookup = installDict.install.get('install feature routing')
+    rsat_lookup = installDict.install.get('install feature rsat')
+
+    install_routing = pshell_decoder(routing_lookup)
+
+    if ('Install-WindowsFeature' in install_routing
+        or 'Install-WindowsFeature' in install_rsat
+        or 'Install-RemoteAccess' in install_routing
+        or 'Install-RemoteAccess' in install_routing):
+    
+        print('notify~! This command is supported only on Windows Server machines')
+        newline()
+        return
+
+    input_loop = 1
+
+    while input_loop == 1:
+        bgp_peer = input('notify~! Enter a name for the new '\
+            + 'BGP peer profile: ')
+
+        if any(bgp_peer) == True:
+            input_loop = 0
+            pass
+
+    input_loop = 1
+
+    while input_loop == 1:
+
+        bgp_local_ip = input('notify~! Enter the local IP address '\
+            +'used for BGP peering: ')
+
+        if any(bgp_local_ip) == True:
+
+            split_ip = bgp_local_ip.split('.')
+
+            if len(split_ip) == 4:
+                for octet in split_ip:
+                    if int(octet) < 0 or int(octet) > 255:
+                        print('\nerror~! Invalid IP address.\n')
+
+                    else:
+                        input_loop = 0
+                        pass
+
+    input_loop = 1
+
+    while input_loop == 1:
+
+        bgp_remote_ip = input('notify~! Enter the remote IP '\
+            + 'address used by your BGP peer: ')
+
+        if any(bgp_remote_ip) == True:
+
+            split_ip = bgp_remote_ip.split('.')
+
+            if len(split_ip) == 4:
+
+                for octet in split_ip:
+                    if int(octet) < 0 or int(octet) > 255:
+                        print('\nerror~! Invalid IP address.\n')
+                    else:
+                        input_loop = 0
+                        pass
+            else:
+                print('\nerror~! Invalid IP address.\n')
+
+
+    input_loop = 1
+
+    while input_loop == 1:
+        bgp_local_asn = input('notify~! Enter the local autonomous system number: ')
+        if any(bgp_local_asn) == True:
+            input_loop = 0
+            pass
+
+    input_loop = 1
+
+    while input_loop == 1:
+
+        bgp_remote_asn = input('notify~! Enter the remote autonomous '\
+            + 'system number: ')
+
+        if any(bgp_remote_asn) == True:
+            input_loop = 0
+            pass
+
+    input_loop = 1
+
+    while input_loop == 1:
+
+        pre_reqs = input('notify~! RSAT and RRAS are required to enable BGP.'\
+        + ' Install now? (y/n) ')
+
+        if pre_reqs in yes:
+
+            input_loop = 0
+
+            print('notify~! Installing RRAS routing features')
+
+            if 'NoChangeNeeded' in install_routing:
+                print('notify~! Dependency already met: routing')
+                pass
+
+            print('notify~! Installing RSAT')
+
+            install_rsat = pshell_decoder(rsat_lookup)
+
+            if 'NoChangeNeeded' in install_rsat:
+                print('notify~! Dependency already met: rsat')
+                pass
+
+            if 'ArgumentNotValid:' in install_routing\
+            or 'ArgumentNotValid' in install_rsat:
+                print('notify~! Feature is either unknown or '\
+                    + 'has unmet dependencies.')
+                newline()
+                return
+
+            else:
+                print('notify~! Enabling BGP routing')
+                subprocess.call(['powershell.exe','Install-RemoteAccess -VpnType RoutingOnly | Out-Null'])
+                print('notify~!  Dependencies installed successfully.')
+                bgp_routing('bgp id {} {}'.format(bgp_local_ip, bgp_local_asn))
+                bgp_routing('bgp peer {} {} {} {}'.format(bgp_peer, bgp_remote_ip, bgp_remote_asn, bgp_local_ip))
+
+        elif pre_reqs in no:
+            input_loop = 0
+            newline()
+
+        else:
+            pass
 
 def active_directory_deployment(command):
 
@@ -52,7 +191,9 @@ def active_directory_deployment(command):
 
                 print('notify~! Checking static IP addresses for entry')
 
-                check_ip = pshell_decoder('Get-NetIPAddress -AddressFamily IPv4 | Select-Object -Property IPAddress | Format-Table -HideTableHeaders')
+                check_ip = pshell_decoder('Get-NetIPAddress -AddressFamily '\
+                    + 'IPv4 | Select-Object -Property IPAddress | '\
+                    + 'Format-Table -HideTableHeaders')
 
                 clean_output = check_ip.replace('\r','')
                 cleaner_output = clean_output.lstrip(' ')
@@ -69,7 +210,8 @@ def active_directory_deployment(command):
                     else:
                         if len(ip_address_list) == ticker - 1:
                             newline()
-                            print('error~! This IP address is not configured. Use \'show ip address\' for a list')
+                            print('error~! This IP address is not configured. '\
+                                + 'Use \'show ip address\' for a list')
                             newline()
                             ip_loop = 0
                             return
@@ -95,7 +237,8 @@ def active_directory_deployment(command):
                     pass_loop2 = 1
 
                     while pass_loop2 == 1:
-                        smap_confirmed = getpass('input~! Confirm the Safemode Administrator Password: ')
+                        smap_confirmed = getpass('input~! Confirm the Safemode '\
+                            + 'Administrator Password: ')
 
                         if any(smap_confirmed) == True:
 

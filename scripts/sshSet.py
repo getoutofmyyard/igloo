@@ -2,7 +2,6 @@ import subprocess, os
 from netmiko import ConnectHandler, cisco, hp, juniper
 from getpass import getpass
 
- #Global variable to keep track of output directories in the write_ssh_connections function
 
  #Newline function
 def newline():

@@ -33,6 +33,7 @@ def tcp_scan(tcp_arg):
         print ('notify~! Couldn\'t connect to remote host.')
         newline()
     newline()
+    newline()
 
 
 def tcp_ping(tcp_ping_arg):
@@ -43,7 +44,6 @@ def tcp_ping(tcp_ping_arg):
         remote_device_ip  = socket.gethostbyname(remote_device)
         socket.setdefaulttimeout(0.02)
         newline()
-        #print ('\nnotify~! Attempting connections against {} on TCP port {}...\n'.format(remote_device_ip, str(port_number)))
 
         count = 0
         ack_count = 0
@@ -70,7 +70,11 @@ def tcp_ping(tcp_ping_arg):
             newline()
 
     else:
-          pass
+        pass
+        newline()
+        with open('./help-files/helpTcpPing.txt','r') as help_file:
+            print(help_file.read())
+        newline()
 
 def net_reset():
     get_nics = pshell_decoder('Restart-NetAdapter -Name \'*\' -WhatIf | sort-object')

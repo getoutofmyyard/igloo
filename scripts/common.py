@@ -8,7 +8,7 @@ quit = ['exit','end','bye','quit','leave','esc']
 #invoke cmd.exe when these terms are discovered
 cmd_exe_options = ['tftp','ftp','telnet','netsh','nslookup',\
                    'ping','tracert','ipconfig', 'dir', \
-                   'whoami']
+                   'whoami','calc','notepad']
 
 pshell_exe_options = ['ls','pwd', 'rm', 'rmdir', 'mkdir', \
                       'xcopy','copy','robocopy','cat']

@@ -1,19 +1,34 @@
-import sys, string, os, subprocess, random, ctypes, hashlib
-import socket, datetime, re
-from common import *
+
+import os
+import random
+import re
+import subprocess
+
+from common import pshell_decoder, newline
 
 def crypto_ipsec_build(vpn_auth, vpn_encrypt, vpn_group):
-    # Receives var from cryptoConfig(cryptoArg), gathers info, and then executes a powershell command which creates an ipsec vpn
+
     try:
         vpn_name = input('\nconf~$ Name the vpn connection: ')
         vpn_server = input('conf~$ Enter the IP address of your vpn server: ')
         newline()
+
         print('notify~! Creating VPN adapter...')
-        os.system('powershell Add-VpnConnection -Name '+vpn_name+' -ServerAddress '+vpn_server+' -TunnelType Ikev2 -EncryptionLevel Required -SplitTunneling -PassThru > nul 2>&1')
+
+        os.system('powershell Add-VpnConnection -Name '+vpn_name+' '\
+            + '-ServerAddress '+vpn_server+' -TunnelType Ikev2 '\
+            + '-EncryptionLevel Required -SplitTunneling -PassThru > nul 2>&1')
+
         print('notify~! Configuring encryption, hash, and DH group options...')
-        os.system('powershell Set-VpnConnectionIPsecConfiguration -ConnectionName '+vpn_name+' -AuthenticationTransformConstants '+vpn_auth+' -CipherTransformConstants '+vpn_encrypt+' -EncryptionMethod '+vpn_encrypt+' -IntegrityCheckMethod '+vpn_auth+' -PfsGroup None -DHGroup '+vpn_group+' -PassThru -Force > nul 2>&1')
+
+        os.system('powershell Set-VpnConnectionIPsecConfiguration -ConnectionName '+vpn_name\
+            + ' -AuthenticationTransformConstants '+vpn_auth+' -CipherTransformConstants '\
+            + vpn_encrypt+' -EncryptionMethod '+vpn_encrypt+' -IntegrityCheckMethod '\
+            + vpn_auth+' -PfsGroup None -DHGroup '+vpn_group+' -PassThru -Force > nul 2>&1')
+
         print('notify~! IPSec VPN \'{}\' has been created: Encryption={}, Hash={}, Group={}'.format(vpn_name, vpn_encrypt, vpn_auth, vpn_group))
         newline()
+
     except:
         newline()
         print('error~! Operation terminated unexpectedly.')
@@ -47,12 +62,16 @@ def crypto_ipsec_options(ipsec_arg):
         newline()
 
 def crypto_pptp_build(vpn_auth):
-    # Receives var from cryptoConfig(cryptoArg), gathers info, and then executes a powershell command which creates a pptp vpn
     vpn_name = input('\nconf~$ Name the vpn connection: ')
     vpn_server = input('conf~$ Enter the IP address of your vpn server: ')
     newline()
+
     print('notify~! Creating VPN adapter...')
-    os.system('powershell Add-VpnConnection -Name '+vpn_name+' -ServerAddress '+vpn_server+' -TunnelType Pptp -AuthenticationMethod '+vpn_auth+' -SplitTunneling -PassThru > nul 2>&1')
+
+    os.system('powershell Add-VpnConnection -Name '+vpn_name+' -ServerAddress '\
+        +vpn_server+' -TunnelType Pptp -AuthenticationMethod '+vpn_auth\
+        +' -SplitTunneling -PassThru > nul 2>&1')
+
     print('notify~! PPTP VPN \'{}\' has been created: Auth={}'.format(vpn_name, vpn_auth))
     newline()
 
@@ -118,7 +137,7 @@ def generate_rsa():
         cn = input('input~! DNS common name: ')
         ou = input('input~! Active Directory OU: ')
         san = input('input~! SAN: ')
-        dc =  input('input~! DC: ')
+        dc = input('input~! DC: ')
 
         strip_cn = cn.rstrip(' ')
         strip_ou = ou.rstrip(' ')
@@ -137,7 +156,9 @@ def generate_rsa():
 
         if '   PSParentPath:' in create_cert:
             newline()
-            print('notify~! Self-signed certificate created and stored in \"Cert:\\LocalMachine\\My\" (Computer Certificates > Personal)')
+            print('notify~! Self-signed certificate created and stored '\
+                + 'in \"Cert:\\LocalMachine\\My\" (Computer Certificates '\
+                + '> Personal)')
             newline()
         else:
             newline()

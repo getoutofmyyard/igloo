@@ -1,5 +1,7 @@
-import subprocess, os 
-from common import *
+import subprocess
+import os
+
+from common import pshell_decoder, newline
 
 def fwall_rule_config(rule_arg):
     # Assigns firewall variables and pipes them into fwall_rule_build
@@ -31,7 +33,7 @@ def fwall_rule_config(rule_arg):
 
 def fwall_display(show_fwall_command):
     # Record the traffic direction.
-    if show_fwall_command == 'show fwall out': 
+    if show_fwall_command == 'show fwall out':
         direction = 'Outbound'
     elif show_fwall_command == 'show fwall in':
         direction = 'Inbound'
@@ -39,7 +41,7 @@ def fwall_display(show_fwall_command):
     newline()
     print('notify~! Fetching...')
     newline()
-    subprocess.call(['powershell.exe','Get-NetFirewallRule -Direction '+direction+\
+    subprocess.call(['powershell.exe', 'Get-NetFirewallRule -Direction '+direction+\
                     ' -Enabled True | Sort-Object -Property DisplayName | ' + \
                     'Select-Object -Property DisplayName,Profile,Action,Direction'])
 
@@ -63,47 +65,47 @@ def fwall_toggle(fwall_cmd):
 
     if fwall_cmd == 'fwall on':
         newline()
-        print ('notify~! Firewall enabled globally')
+        print('notify~! Firewall enabled globally')
         newline()
     elif fwall_cmd == 'fwall off':
         newline()
-        print ('notify~! Firewall disabled globally')
+        print('notify~! Firewall disabled globally')
         newline()
     elif fwall_cmd == 'fwall dom on':
         newline()
-        print ('notify~! Firewall enabled for domain networks')
+        print('notify~! Firewall enabled for domain networks')
         newline()
     elif fwall_cmd == 'fwall dom off':
         newline()
-        print ('notify~! Firewall disabled for domain networks')
+        print('notify~! Firewall disabled for domain networks')
         newline()
     elif fwall_cmd == 'fwall pub on':
         newline()
-        print ('notify~! Firewall enabled for public networks')
+        print('notify~! Firewall enabled for public networks')
         newline()
     elif fwall_cmd == 'fwall pub off':
         newline()
-        print ('notify~! Firewall disabled for public networks')
+        print('notify~! Firewall disabled for public networks')
         newline()
     elif fwall_cmd == 'fwall priv on':
         newline()
-        print ('notify~! Firewall enabled for private networks')
+        print('notify~! Firewall enabled for private networks')
         newline()
     elif fwall_cmd == 'fwall priv off':
         newline()
-        print ('notify~! Firewall disabled for private networks')
+        print('notify~! Firewall disabled for private networks')
         newline()
 
 def fwall_delete(delete_statement):
-        # if firewall rule exists, delete. if not
-        fwall_rule_name = delete_statement[3]
+    # if firewall rule exists, delete. if not
+    fwall_rule_name = delete_statement[3]
+    newline()
+    print('notify~! Attempting to delete firewall rule \'{}\'...'.format(fwall_rule_name))
+    not_found_error = "ObjectNotFound"
+    remove_rule = pshell_decoder('Remove-NetFirewallRule -DisplayName ' + fwall_rule_name)
+    if not_found_error in remove_rule:
+        print("notify~! Rule does not exist.")
         newline()
-        print('notify~! Attempting to delete firewall rule \'{}\'...'.format(fwall_rule_name))
-        not_found_error = "ObjectNotFound"
-        remove_rule = pshell_decoder('Remove-NetFirewallRule -DisplayName ' + fwall_rule_name)
-        if not_found_error in remove_rule:
-            print("notify~! Rule does not exist.")
-            newline()
-        else:
-            print('notify~! Firewall rule \'{}\' was deleted.'.format(fwall_rule_name))
-            newline()
+    else:
+        print('notify~! Firewall rule \'{}\' was deleted.'.format(fwall_rule_name))
+        newline()
