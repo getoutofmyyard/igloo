@@ -52,8 +52,7 @@ def show_tree(show_command):
             newline()
 
         elif show_command == 'show cidr-table':
-            read_file("C:\\Users\\Jesus Christ\\Desktop\\igloo-dev\\ \
-                help-files\\helpCidrTable.txt")
+            read_file(".\\help-files\\helpCidrTable.txt")
 
         elif show_command == 'show log app':
 
