@@ -1,0 +1,5 @@
+Advertise prefix to peers                   : bgp advertise 1.1.1.1/32
+Advertise prefix to peers                   : bgp advertise 192.168.1.0 255.255.255.0
+Stop advertising prefix                     : no bgp advertise 10.0.0.0/8
+
+Use 'man bgp' for detailed command information.

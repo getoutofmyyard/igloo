@@ -54,7 +54,7 @@ install = {
 	'install feature rdp-server':'Install-WindowsFeature -Name Remote-Desktop-Services -IncludeAllSubFeature',
 	'install feature remote-access':'Install-WindowsFeature -Name RemoteAccess -IncludeAllSubFeature',
 	'install feature remote-assist':'Install-WindowsFeature -Name Remote-Assistance  -IncludeAllSubFeature',
-	'install feature routing':'Install-WindowsFeature -Name DirectAccess-VPN -IncludeAllSubFeature',
+	'install feature direct-access':'Install-WindowsFeature -Name DirectAccess-VPN -IncludeAllSubFeature',
 	'install feature routing':'Install-WindowsFeature -Name Routing -IncludeAllSubFeature',
 	'install feature rpc-over-http-proxy':'Install-WindowsFeature -Name RPC-over-HTTP-Proxy -IncludeAllSubFeature',
 	'install feature rsat':'Install-WindowsFeature -Name RSAT  -IncludeAllSubFeature',

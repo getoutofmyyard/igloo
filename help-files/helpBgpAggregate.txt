@@ -1,0 +1,6 @@
+Advertise aggregate only                    : bgp aggregate 10.0.0.0/16 summary-only
+Advertise aggregate and longer prefixes     : bgp aggregate 192.168.1.0/24
+Stop advertising aggregate                  : no bgp aggregate 10.0.0.0/16
+
+The 'summary-only' option is not required when disabling advertisements.
+Use 'man bgp' for detailed command information.

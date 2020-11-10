@@ -1,3 +1,5 @@
-advert              - display bgp routes advertised to peers
+advertise           - display prefixes currently advertised
+aggregate           - display aggregate prefixes currently advertised
 id                  - display local bgp configuration
 peer                - display bgp peer configuration
+status              - display bgp statistics and peering information

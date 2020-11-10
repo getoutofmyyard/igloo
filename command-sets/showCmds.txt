@@ -1,7 +1,9 @@
 show arp
 show bgp id
 show bgp peer
-show bgp advert
+show bgp advertise
+show bgp aggregate
+show bgp status
 show cidr-table
 show crypto
 show dns cache

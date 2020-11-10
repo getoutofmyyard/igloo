@@ -1,17 +1,24 @@
-import installDict
+import installDict, conversion
 import subprocess
+from decimal import Decimal
 from common import pshell_decoder, newline, yes, no
 
 
 # Install RRAS with BGP features only
 def bgp_install():
     print('notify~! Enabling BGP routing')
-    subprocess.call(['powershell.exe','Install-RemoteAccess -VpnType RoutingOnly | Out-Null'])
-    newline()
-    print('notify~!  Dependencies installed successfully.'\
-    +' Use \'win reboot\' to enable BGP routing features.')
-    newline()
-    return
+    install_routing_daemon = pshell_decoder('Install-RemoteAccess -VpnType RoutingOnly | Out-Null')
+    if 'The term \'Install-RemoteAccess\' is not recognized as the name of a cmdlet' in install_routing_daemon:
+        newline()
+        print('notify~! RSAT features are not installed, or are not finished installing.')
+        print('notify~! If you just installed RSAT, reload this server and run \'bgp enable\' again.')
+        newline()
+    else:
+        newline()
+        print('notify~!  Dependencies installed successfully.'\
+        +' Use \'win reboot\' to enable BGP routing features.')
+        newline()
+        return
 
 # BGP options
 def bgp_routing(bgp_command):
@@ -77,18 +84,15 @@ def bgp_routing(bgp_command):
                 routing_lookup = installDict.install.get('install feature routing')
                 rsat_lookup = installDict.install.get('install feature rsat')
 
+                print('notify~! Installing RRAS routing features')
+
                 install_routing = pshell_decoder(routing_lookup)
 
-                if ('Install-WindowsFeature' in install_routing
-                    or 'Install-WindowsFeature' in install_rsat
-                    or 'Install-RemoteAccess' in install_routing
-                    or 'Install-RemoteAccess' in install_routing):
+                if 'The term \'Install-WindowsFeature\' is not recognized' in install_routing:
                 
                     print('notify~! This command is supported only on Windows Server machines')
                     newline()
                     return
-
-                print('notify~! Installing RRAS routing features')
 
                 if 'NoChangeNeeded' in install_routing:
                     print('notify~! Dependency already met: routing')
@@ -103,7 +107,7 @@ def bgp_routing(bgp_command):
                     pass
 
                 if 'ArgumentNotValid:' in install_routing\
-                or 'ArgumentNotValid' in install_rsat:
+                    or 'ArgumentNotValid' in install_rsat:
                     print('notify~! Feature is either unknown or has unmet dependencies.')
                     newline()
 
@@ -112,19 +116,149 @@ def bgp_routing(bgp_command):
 
             elif pre_reqs in no:
                 input_loop = 0
-                newline()
+                bgp_install()
 
             else:
                 pass
 
-    elif split_cmd[1] == 'advert' \
+    elif split_cmd[1] == 'advertise'\
+    and '.' in split_cmd[2]\
+    and '/' in split_cmd [2]:
+        # Add-BgpCustomRoute
+        advertise_route = pshell_decoder('Add-BgpCustomRoute -Network {}'.format(split_cmd[2]))
+
+        if 'The term \'Add-BgpCustomRoute\' is not recognized' in advertise_route:
+            newline()
+            print('notify~! BGP is not enabled on this machine. Use \'bgp enable\' and \'bgp id\' first.')
+            newline()
+        elif 'Add-BgpCustomRoute' in advertise_route:
+            newline()
+            print('error~! Invalid prefix.')
+            newline()
+        else:
+            pass
+
+    elif split_cmd[1] == 'advertise'\
+    and '.' in split_cmd[2]\
+    and '.' in split_cmd[3]:
+        # Add-BgpCustomRoute
+
+        network_address = split_cmd[2]
+        subnet_mask = split_cmd[3]
+
+        split_net = network_address.split('.')
+        split_mask = subnet_mask.split('.')
+
+        for octet in split_net:
+            numberize = Decimal(octet)
+            if numberize < 0 \
+            or numberize > 255:
+                newline()
+                print('error~! Invalid network address') 
+                newline()
+                return
+
+            else:
+                pass
+
+        for octet in split_mask:
+            numberize = Decimal(octet)
+            if numberize < 0 \
+            or numberize > 255:
+                newline()
+                print('error~! Invalid subnet mask') 
+                newline()
+                return
+
+            else:
+                pass
+
+
+        mask_to_prefix_lookup = conversion.cidr_dictionary.get(subnet_mask)
+
+        advertise_route = pshell_decoder('Add-BgpCustomRoute -Network {}/{}'.format(network_address,mask_to_prefix_lookup))
+
+        if 'The term \'Add-BgpCustomRoute\' is not recognized' in advertise_route:
+            newline()
+            print('notify~! BGP is not enabled on this machine. Use \'bgp enable\' and \'bgp id\' first.')
+            newline()
+        else:
+            pass
+
+    elif split_cmd[2] == 'advertise'\
+    and '.' in split_cmd[3]\
+    and '/' in split_cmd [3]\
+    and split_cmd[0] == 'no':
+        # Add-BgpCustomRoute
+        remove_route = pshell_decoder('Remove-BgpCustomRoute -Network {} -Force'.format(split_cmd[3]))
+
+        if 'The term \'Remove-BgpCustomRoute\' is not recognized' in remove_route:
+            newline()
+            print('notify~! BGP is not enabled on this machine. Use \'bgp enable\' and \'bgp id\' first.')
+            newline()
+        elif 'Remove-BgpCustomRoute' in remove_route:
+            newline()
+            print('error~! Invalid prefix.')
+            newline()
+        else:
+            pass
+
+    elif split_cmd[2] == 'advertise'\
+    and '.' in split_cmd[3]\
+    and '.' in split_cmd[4]\
+    and split_cmd[0] == 'no':
+        # Add-BgpCustomRoute
+
+        network_address = split_cmd[3]
+        subnet_mask = split_cmd[4]
+
+        split_net = network_address.split('.')
+        split_mask = subnet_mask.split('.')
+
+        for octet in split_net:
+            numberize = Decimal(octet)
+            if numberize < 0 \
+            or numberize > 255:
+                newline()
+                print('error~! Invalid network address') 
+                newline()
+                return
+
+            else:
+                pass
+
+        for octet in split_mask:
+            numberize = Decimal(octet)
+            if numberize < 0 \
+            or numberize > 255:
+                newline()
+                print('error~! Invalid subnet mask') 
+                newline()
+                return
+
+            else:
+                pass
+
+
+        mask_to_prefix_lookup = conversion.cidr_dictionary.get(subnet_mask)
+
+        remove_route = pshell_decoder('Remove-BgpCustomRoute -Network {}/{} -Force'.format(network_address,mask_to_prefix_lookup))
+
+        if 'The term \'Remove-BgpCustomRoute\' is not recognized' in advertise_route:
+            newline()
+            print('notify~! BGP is not enabled on this machine. Use \'bgp enable\' and \'bgp id\' first.')
+            newline()
+        else:
+            pass
+
+    elif split_cmd[1] == 'aggregate' \
     and '.' in split_cmd[2]:
-        # bgp advert 172.16.1.0/24
+        # bgp aggregate 172.16.1.0/24
         prefix = split_cmd[2]
         if len(split_cmd) == 3:
             advertise_prefix = pshell_decoder('Add-BgpRouteAggregate -Prefix {} -SummaryOnly Disabled -Force'.format(prefix))
         elif len(split_cmd) == 4 \
-        and split_cmd[3] == 'summary':
+        and split_cmd[3] == 'summary-only':
             advertise_prefix = pshell_decoder('Add-BgpRouteAggregate -Prefix {} -SummaryOnly Enabled -Force'.format(prefix))
         if ' A More or Less specific prefix' in advertise_prefix:
             newline()
@@ -147,6 +281,8 @@ def bgp_routing(bgp_command):
             newline()
             print('notify~! Route to prefix {} is being advertised to peers'.format(prefix))
             newline()
+
+    # Option for removal of BGP router id ("no bgp id x.x.x.x")
     elif split_cmd[2] == 'id' \
     and split_cmd[0] == 'no':
         remove_router = pshell_decoder('Remove-BgpRouter -Force')
@@ -204,7 +340,7 @@ def bgp_routing(bgp_command):
 
 
 
-    elif split_cmd[2] == 'advert' \
+    elif split_cmd[2] == 'aggregate' \
     and split_cmd[0] == 'no' \
     and '.' in split_cmd[3]:
         # no bgp network 172.16.1.0/24
@@ -229,12 +365,12 @@ def bgp_routing(bgp_command):
             newline()
         else:
             newline()
-            print('notify~! Route for prefix {} is now pruned from routing updates'.format(prefix))
+            print('notify~! Aggregate {} no longer advertised'.format(prefix))
             newline()      
 
     elif split_cmd[2] == 'peer' \
     and split_cmd[0] == 'no':
-        peer_name = split_cmd[4]
+        peer_name = split_cmd[3]
         rm_peer = pshell_decoder('Remove-BgpPeer -Name {} -Force'.format(peer_name))
         if 'Remove-BgpPeer' in rm_peer:
             newline()

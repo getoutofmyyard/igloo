@@ -3,9 +3,11 @@
 
 show_command_set = {
 	'show arp':'arp -a',
-	'show bgp advert':'Get-BgpRouteAggregate',
+	'show bgp aggregate':'Get-BgpRouteAggregate',
+	'show bgp advertise':'Get-BgpCustomRoute',
 	'show bgp id':'Get-BgpRouter | Select-Object BgpIdentifier, LocalASN, TransitRouting, RouteReflector | Format-List',
 	'show bgp peer':'Get-BgpPeer -Verbose | Format-List',
+	'show bgp status':'Get-BgpStatistics',
 	'show crypto':'Get-VpnConnection | Select-Object -Property Name, ServerAddress,TunnelType,AuthenticationMethod, ConnectionStatus',
 	'show dns cache':'Get-DnsClientCache | Sort-Object -Property Entry | Format-Table -AutoSize',
 	'show dns server':'Get-DnsClientServerAddress | Sort-Object -Property AddressFamily | Format-Table -Autosize',

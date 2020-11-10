@@ -8,7 +8,6 @@ from common import *
 
 
 def show_tree(show_command):
-
     newline()
 
     try:
@@ -24,15 +23,24 @@ def show_tree(show_command):
                     print('notify~! Your translated address is ' + format_output)
                     newline()
 
-                elif ('Get-BgpPeer' in output or 'Get-BgpRouter' in output):
-                    print('notify~! BGP routing is not enabled for this machine')
+                elif 'Get-BgpPeer' in output:
+                    print('notify~! No BGP peers are configured. Use \'bgp peer\'.')
+                    newline()
+
+                elif 'Get-BgpRouter' in output:
+                    print('notify~! BGP ID is not configured. Use \'bgp id\'.')
                     newline()
 
                 elif 'Get-BgpRouteAggregate' in output:
-                    print('notify~! This machine has unmet dependencies.' 
-                        + ' Use \'bgp enable\'')
+                    print('notify~! No BGP aggregates are advertised.')
                     newline()
 
+                elif 'Get-BgpCustomRoute' in output:
+                    print('notify~! No BGP prefixes are advertised.')
+                    newline()
+                elif 'Get-BgpStatistics' in output:
+                    print('notify~! No BGP statistics available.')
+                    newline()
                 else:
                     print(output)
 
