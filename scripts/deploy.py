@@ -15,25 +15,54 @@ def deploy_bgp():
 
     newline()
 
+
+    input_loop = 1
+
+    while input_loop == 1:
+
+        pre_reqs = input('notify~! RSAT and RRAS are required to enable BGP. Install now? (y/n) ')
+
+        if pre_reqs in yes:
+            input_loop = 0
+            
+        elif pre_reqs in no:
+            input_loop = 0
+            return
+
     routing_lookup = installDict.install.get('install feature routing')
     rsat_lookup = installDict.install.get('install feature rsat')
 
+    print('notify~! Installing RRAS routing features')
+
     install_routing = pshell_decoder(routing_lookup)
 
-    if ('Install-WindowsFeature' in install_routing
-        or 'Install-WindowsFeature' in install_rsat
-        or 'Install-RemoteAccess' in install_routing
-        or 'Install-RemoteAccess' in install_routing):
+    if 'The term \'Install-WindowsFeature\' is not recognized' in install_routing:
     
         print('notify~! This command is supported only on Windows Server machines')
         newline()
         return
 
+    if 'NoChangeNeeded' in install_routing:
+        print('notify~! Dependency already met: routing')
+        pass
+
+    print('notify~! Installing RSAT')
+
+    install_rsat = pshell_decoder(rsat_lookup)
+
+    if 'NoChangeNeeded' in install_rsat:
+        print('notify~! Dependency already met: rsat')
+        pass
+
+    if 'ArgumentNotValid:' in install_routing\
+        or 'ArgumentNotValid' in install_rsat:
+        print('notify~! Feature is either unknown or has unmet dependencies.')
+        newline()
+
     input_loop = 1
 
     while input_loop == 1:
-        bgp_peer = input('notify~! Enter a name for the new '\
-            + 'BGP peer profile: ')
+        bgp_peer = input('notify~! Enter a name for the new BGP peer profile: ')
 
         if any(bgp_peer) == True:
             input_loop = 0
@@ -43,8 +72,7 @@ def deploy_bgp():
 
     while input_loop == 1:
 
-        bgp_local_ip = input('notify~! Enter the local IP address '\
-            +'used for BGP peering: ')
+        bgp_local_ip = input('notify~! Enter the local IP address used for BGP peering: ')
 
         if any(bgp_local_ip) == True:
 
@@ -63,8 +91,7 @@ def deploy_bgp():
 
     while input_loop == 1:
 
-        bgp_remote_ip = input('notify~! Enter the remote IP '\
-            + 'address used by your BGP peer: ')
+        bgp_remote_ip = input('notify~! Enter the remote IP address used by your BGP peer: ')
 
         if any(bgp_remote_ip) == True:
 
@@ -101,51 +128,13 @@ def deploy_bgp():
             input_loop = 0
             pass
 
-    input_loop = 1
 
-    while input_loop == 1:
+    print('notify~! Enabling BGP routing')
+    subprocess.call(['powershell.exe','Install-RemoteAccess -VpnType RoutingOnly | Out-Null'])
+    print('notify~!  Dependencies installed successfully.')
+    bgp_routing('bgp id {} {}'.format(bgp_local_ip, bgp_local_asn))
+    bgp_routing('bgp peer {} {} {} {}'.format(bgp_peer, bgp_remote_ip, bgp_remote_asn, bgp_local_ip))
 
-        pre_reqs = input('notify~! RSAT and RRAS are required to enable BGP.'\
-        + ' Install now? (y/n) ')
-
-        if pre_reqs in yes:
-
-            input_loop = 0
-
-            print('notify~! Installing RRAS routing features')
-
-            if 'NoChangeNeeded' in install_routing:
-                print('notify~! Dependency already met: routing')
-                pass
-
-            print('notify~! Installing RSAT')
-
-            install_rsat = pshell_decoder(rsat_lookup)
-
-            if 'NoChangeNeeded' in install_rsat:
-                print('notify~! Dependency already met: rsat')
-                pass
-
-            if 'ArgumentNotValid:' in install_routing\
-            or 'ArgumentNotValid' in install_rsat:
-                print('notify~! Feature is either unknown or '\
-                    + 'has unmet dependencies.')
-                newline()
-                return
-
-            else:
-                print('notify~! Enabling BGP routing')
-                subprocess.call(['powershell.exe','Install-RemoteAccess -VpnType RoutingOnly | Out-Null'])
-                print('notify~!  Dependencies installed successfully.')
-                bgp_routing('bgp id {} {}'.format(bgp_local_ip, bgp_local_asn))
-                bgp_routing('bgp peer {} {} {} {}'.format(bgp_peer, bgp_remote_ip, bgp_remote_asn, bgp_local_ip))
-
-        elif pre_reqs in no:
-            input_loop = 0
-            newline()
-
-        else:
-            pass
 
 def active_directory_deployment(command):
 
@@ -191,9 +180,7 @@ def active_directory_deployment(command):
 
                 print('notify~! Checking static IP addresses for entry')
 
-                check_ip = pshell_decoder('Get-NetIPAddress -AddressFamily '\
-                    + 'IPv4 | Select-Object -Property IPAddress | '\
-                    + 'Format-Table -HideTableHeaders')
+                check_ip = pshell_decoder('Get-NetIPAddress -AddressFamily IPv4 | Select-Object -Property IPAddress | Format-Table -HideTableHeaders')
 
                 clean_output = check_ip.replace('\r','')
                 cleaner_output = clean_output.lstrip(' ')
