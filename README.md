@@ -2,20 +2,6 @@
 
 Igloo is a terminal application which combines Python and PowerShell to simplify network and Windows administration tasks. 
 
-AUTOMATE SSH OUTPUT COLLECTION:
-```
-igloo~$ ssh write ios
-
-input~! Specify the path to your device list: C:\Users\myuser\dev.txt
-input~! Specify the destination directory path: C:\Device Files\
-input~! Enter a 'show' command: show version | in Version
-input~! Enter a username: ssh-username
-Password: [ssh-password]
-notify~! Saving file 10.0.0.1.txt...
-notify~! Saving file 10.0.0.254.txt...
-notify~! Saving file my-router.txt...
-notify~! Saving file your-router.txt...
-```
 CREATE AND MANAGE COMPLEX VPN PROFILES:
 ```
 igloo~$ crypto ipsec aes256 sha256 group14
